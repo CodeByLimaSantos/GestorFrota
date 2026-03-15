@@ -6,6 +6,67 @@ import jakarta.persistence.*;
 @Table( name= "Cars")
 
 public class Vehicle {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private long id;
+        @Column(nullable = false, unique = true)
+        private String licensePlate;
+        @Column(nullable = false)
+        private String make;
+        @Column(nullable = false)
+        private String model;
+
+        private int year;
+        private String color;
+        private String fuelType;
+        private int mileage;
+        private double weekRate;
+        @ManyToOne //a lot of contracts can use the same vehicle( but only one at a time)
+        private Rental rental;
+        @Enumerated(EnumType.STRING)
+        @Column(nullable = false)
+        private VehicleStatus status;
+
+        public enum VehicleStatus {
+            AVAILABLE,
+            RENTED,
+            MAINTENANCE
+        }
+
+    public Vehicle() {}
+
+    public Vehicle(long id, String licensePlate,
+                   String make, String model,
+                   int year, String fuelType,
+                   String color, int mileage,
+                   double weekRate,
+                   VehicleStatus status) {
+            this.id = id;
+            this.licensePlate = licensePlate;
+            this.make = make;
+            this.model = model;
+            this.year = year;
+            this.fuelType = fuelType;
+            this.color = color;
+            this.mileage = mileage;
+            this.weekRate = weekRate;
+            this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return  "id :" + id +
+                ", licensePlate : " + licensePlate +
+                ", make : " + make +
+                ", model : " + model +
+                ", year : " + year +
+                ", color : " + color +
+                ", fuelType :" + fuelType +
+                ", mileage : " + mileage +
+                ", weekRate : " + weekRate +
+                ", status : " + status ;
+    }
     public long getId() {
         return id;
     }
@@ -69,15 +130,6 @@ public class Vehicle {
     public void setColor(String color) {
         this.color = color;
     }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public double getWeekRate() {
         return weekRate;
     }
@@ -85,36 +137,12 @@ public class Vehicle {
     public void setWeekRate(double weekRate) {
         this.weekRate = weekRate;
     }
+    public VehicleStatus getStatus() {
+        return status;
+    }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @Column(nullable = false, unique = true)
-    private String licensePlate;
-    @Column(nullable = false)
-    private String make;
-    @Column(nullable = false)
-    private String model;
-    private int year;
-    private String color;
-    private String fuelType;
-    private int mileage;
-    private double weekRate;
-    private String status;
-
-    @Override
-    public String toString() {
-        return  "id :" + id +
-                ", licensePlate : " + licensePlate +
-                ", make : " + make +
-                ", model : " + model +
-                ", year : " + year +
-                ", color : " + color +
-                ", fuelType :" + fuelType +
-                ", mileage : " + mileage +
-                ", weekRate : " + weekRate +
-                ", status : " + status ;
-
+    public void setStatus(VehicleStatus status) {
+        this.status = status;
     }
 
 

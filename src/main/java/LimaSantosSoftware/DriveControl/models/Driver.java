@@ -6,6 +6,72 @@ import jakarta.persistence.*;
 @Table(name = "Drivers")
 
 public class Driver {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private String name;
+    @Column(nullable = false, unique = true)
+    private String cnh;
+    @Column(nullable = false, unique = true)
+    private String cpf;
+    @Column(nullable = false)
+    private String licenseCategory;
+    @Column(nullable = false)
+    private String licenseExpiryDate;
+    @Column(nullable = false, unique = true)
+    private String phone;
+    private String email;
+    private String adress;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DriverStatus status;
+    @ManyToOne // a driver can use a lot of rental ( but only one at a time)
+    private Rental rental;
+
+    private enum DriverStatus {
+        AVAILABLE,
+        RENTED,
+        ON_HOLD,
+        INACTIVE
+    }
+
+    public Driver(long id, String name,
+                  String cnh, String cpf,
+                  String licenseCategory,
+                  String licenseExpiryDate,
+                  String email, String phone,
+                  String adress, DriverStatus status,
+                  Rental rental)
+    {
+        this.id = id;
+        this.name = name;
+        this.cnh = cnh;
+        this.cpf = cpf;
+        this.licenseCategory = licenseCategory;
+        this.licenseExpiryDate = licenseExpiryDate;
+        this.email = email;
+        this.phone = phone;
+        this.adress = adress;
+        this.status = status;
+        this.rental = rental;
+    }
+
+    @Override
+    public String toString() {
+        return "Driver : " +
+                "id=" + id +
+                ", name :" + name + '\'' +
+                ", cnh :" + cnh + '\'' +
+                ", cpf :" + cpf + '\'' +
+                ", licenseCategory :" + licenseCategory + '\'' +
+                ", licenseExpiryDate :" + licenseExpiryDate + '\'' +
+                ", phone :" + phone + '\'' +
+                ", email :" + email + '\'' +
+                ", adress :" + adress + '\'' +
+                ", status :" + status + '\'' ;
+    }
+
+
 
     public long getId() {
         return id;
@@ -79,45 +145,13 @@ public class Driver {
         this.adress = adress;
     }
 
-    public String getStatus() {
+    public DriverStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(DriverStatus status) {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Driver : " +
-                "id=" + id +
-                ", name :" + name + '\'' +
-                ", cnh :" + cnh + '\'' +
-                ", cpf :" + cpf + '\'' +
-                ", licenseCategory :" + licenseCategory + '\'' +
-                ", licenseExpiryDate :" + licenseExpiryDate + '\'' +
-                ", phone :" + phone + '\'' +
-                ", email :" + email + '\'' +
-                ", adress :" + adress + '\'' +
-                ", status :" + status + '\'' ;
-    }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String name;
-    @Column(nullable = false, unique = true)
-    private String cnh;
-    @Column(nullable = false, unique = true)
-    private String cpf;
-    @Column(nullable = false)
-    private String licenseCategory;
-    @Column(nullable = false)
-    private String licenseExpiryDate;
-    @Column(nullable = false, unique = true)
-    private String phone;
-    private String email;
-    private String adress;
-    @Column(nullable = false)
-    private String status;
 }
