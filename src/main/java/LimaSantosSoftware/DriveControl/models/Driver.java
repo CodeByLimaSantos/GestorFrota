@@ -1,9 +1,17 @@
 package LimaSantosSoftware.DriveControl.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "Drivers")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 
 public class Driver {
     @Id
@@ -28,130 +36,10 @@ public class Driver {
     @ManyToOne // a driver can use a lot of rental ( but only one at a time)
     private Rental rental;
 
-    private enum DriverStatus {
-        AVAILABLE,
+    public enum DriverStatus {
+        ACTIVE,
         RENTED,
         ON_HOLD,
         INACTIVE
     }
-
-    public Driver(long id, String name,
-                  String cnh, String cpf,
-                  String licenseCategory,
-                  String licenseExpiryDate,
-                  String email, String phone,
-                  String adress, DriverStatus status,
-                  Rental rental)
-    {
-        this.id = id;
-        this.name = name;
-        this.cnh = cnh;
-        this.cpf = cpf;
-        this.licenseCategory = licenseCategory;
-        this.licenseExpiryDate = licenseExpiryDate;
-        this.email = email;
-        this.phone = phone;
-        this.adress = adress;
-        this.status = status;
-        this.rental = rental;
-    }
-
-    @Override
-    public String toString() {
-        return "Driver : " +
-                "id=" + id +
-                ", name :" + name + '\'' +
-                ", cnh :" + cnh + '\'' +
-                ", cpf :" + cpf + '\'' +
-                ", licenseCategory :" + licenseCategory + '\'' +
-                ", licenseExpiryDate :" + licenseExpiryDate + '\'' +
-                ", phone :" + phone + '\'' +
-                ", email :" + email + '\'' +
-                ", adress :" + adress + '\'' +
-                ", status :" + status + '\'' ;
-    }
-
-
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCnh() {
-        return cnh;
-    }
-
-    public void setCnh(String cnh) {
-        this.cnh = cnh;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getLicenseCategory() {
-        return licenseCategory;
-    }
-
-    public void setLicenseCategory(String licenseCategory) {
-        this.licenseCategory = licenseCategory;
-    }
-
-    public String getLicenseExpiryDate() {
-        return licenseExpiryDate;
-    }
-
-    public void setLicenseExpiryDate(String licenseExpiryDate) {
-        this.licenseExpiryDate = licenseExpiryDate;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getAdress() {
-        return adress;
-    }
-
-    public void setAdress(String adress) {
-        this.adress = adress;
-    }
-
-    public DriverStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(DriverStatus status) {
-        this.status = status;
-    }
-
-
 }
