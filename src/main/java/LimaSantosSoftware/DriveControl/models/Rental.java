@@ -13,7 +13,7 @@ import java.time.LocalDate;
 
 
 @Entity
-@Table(name = "Rentals")
+@Table(name = "rentals")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,8 +24,10 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne // a rental can use a lot of vehicles (but only one at a time)
+    @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
     @ManyToOne // a rental can use a lot of drivers (but only one at a time)
+    @JoinColumn(name = "driver_id")
     private Driver driver;
     private LocalDate startDate;
     private LocalDate endDate;

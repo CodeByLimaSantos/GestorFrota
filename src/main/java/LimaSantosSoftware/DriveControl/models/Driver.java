@@ -17,6 +17,7 @@ public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(nullable = false)
     private String name;
     @Column(nullable = false, unique = true)
     private String cnh;
@@ -26,7 +27,7 @@ public class Driver {
     private String licenseCategory;
     @Column(nullable = false)
     private String licenseExpiryDate;
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String phone;
     private String email;
     private String adress;
