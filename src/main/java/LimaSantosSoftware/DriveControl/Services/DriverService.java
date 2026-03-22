@@ -3,6 +3,7 @@ package LimaSantosSoftware.DriveControl.Services;
 import LimaSantosSoftware.DriveControl.models.Driver;
 import LimaSantosSoftware.DriveControl.repository.DriverRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,5 +31,14 @@ public class DriverService {
     //add drivers (create)
     public Driver register_Driver(Driver driver) {
         return driverRepository.save(driver);
+    }
+
+    // delete ninjas (delate)
+    public void delete_driver(Driver driver) {
+       driverRepository.delete(driver);
+    }
+
+    public void delete_driver(Long id) {
+        driverRepository.deleteById(id);
     }
 }
