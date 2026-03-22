@@ -31,4 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+##database config settings, data for temporary tests and some informations on app properties
+
 .MySQLDEMO
+application.properties/
+data/
+DatabaseSettings/

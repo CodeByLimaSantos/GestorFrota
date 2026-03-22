@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name = "Drivers")
+@Table(name = "TB_DRIVERS")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

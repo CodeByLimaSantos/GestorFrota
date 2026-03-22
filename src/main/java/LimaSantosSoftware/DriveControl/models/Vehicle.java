@@ -10,7 +10,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
 @Entity
-@Table(name= "Cars")
+@Table(name= "TB_VEHICLES")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,8 +44,8 @@ public class Vehicle {
     @Column(name = "Mileage")
     private int mileage;
 
-    @Column(name = "Week_Rate")
-    private double weekRate;
+    @Column(precision = 10, scale = 2)   // <- aqui você define DECIMAL(10,2)
+    private java.math.BigDecimal weekRate;
 
     @ManyToOne
     @JoinColumn(name = "Rental_Id") // aqui sim é JoinColumn, pois é relacionamento
