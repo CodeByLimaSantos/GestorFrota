@@ -1,6 +1,7 @@
 package LimaSantosSoftware.DriveControl.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,9 +26,11 @@ public class Rental {
     private Long id;
     @ManyToOne // a rental can use a lot of vehicles (but only one at a time)
     @JoinColumn(name = "vehicle_id")
+    @JsonIgnore
     private Vehicle vehicle;
     @ManyToOne // a rental can use a lot of drivers (but only one at a time)
     @JoinColumn(name = "driver_id")
+    @JsonIgnore
     private Driver driver;
     private LocalDate startDate;
     private LocalDate endDate;
