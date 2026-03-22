@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 @Entity
 @Table(name= "Cars")
@@ -29,7 +32,7 @@ public class Vehicle {
     @Column(name = "Model", nullable = false)
     private String model;
 
-    @Column(name = "Year")
+    @Column(name = "vehicle_year")
     private int year;
 
     @Column(name = "Color")
@@ -49,7 +52,7 @@ public class Vehicle {
     private Rental rental;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "Status", nullable = false)
+    @Column(name = "status", columnDefinition = "varchar(255)")
     private VehicleStatus status;
 
         public enum VehicleStatus {
