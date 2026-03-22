@@ -1,10 +1,9 @@
 package LimaSantosSoftware.DriveControl.repository;
 
-import LimaSantosSoftware.DriveControl.models.Rental;
+import LimaSantosSoftware.DriveControl.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RentalRepository extends JpaRepository<Rental, Long> {
-
-}q
+public interface UserRepository extends JpaRepository<User, Long> {
+}
