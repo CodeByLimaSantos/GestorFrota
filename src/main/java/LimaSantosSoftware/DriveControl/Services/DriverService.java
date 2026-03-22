@@ -5,6 +5,7 @@ import LimaSantosSoftware.DriveControl.repository.DriverRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 
@@ -20,5 +21,14 @@ public class DriverService {
         return driverRepository.findAll();
 
     }
+    //list drivers for id
+    public Driver show_all_Driver_by_Id(Long id) {
+        Optional<Driver> DriverPorId = driverRepository.findById(id) ;
+        return DriverPorId.orElse(null);
 
+    }
+    //add drivers (create)
+    public Driver register_Driver(Driver driver) {
+        return driverRepository.save(driver);
+    }
 }

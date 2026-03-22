@@ -20,15 +20,16 @@ public class driverController {
 
     //add drivers (create)
     @PostMapping("/RegisterDriver")
-    public String registerDriver() {
-        return "Driver registered with sucess!";
+    public Driver registerDriver(@RequestBody  Driver driver) {
+        return driverService.register_Driver(driver);
     }
 
     //search drivers for id (read)
-    @GetMapping("/searchDrivers")
-    public String searchDrivers () {
-        return "drivers found: ";
+    @GetMapping("/searchDrivers/{ID}")
+    public Driver show_all_Driver_by_Id(@PathVariable Long id) {
+    return driverService.show_all_Driver_by_Id(id);
     }
+
     //show all drivers(read)
     @GetMapping("/allDrivers")
     public List<Driver> showAllDrivers () {

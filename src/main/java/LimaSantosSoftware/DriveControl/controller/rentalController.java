@@ -23,7 +23,7 @@ public class rentalController {
         return "All Rentals";
     }
     //update Rentals data (update)
-    @PutMapping("/ChangeId")
+    @PutMapping("/{i}")
     public String changeDriversForId() {
         return "change Rental for id";
     }
