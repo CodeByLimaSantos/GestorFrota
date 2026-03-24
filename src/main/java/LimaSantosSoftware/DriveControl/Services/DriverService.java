@@ -34,11 +34,18 @@ public class DriverService {
     }
 
     // delete ninjas (delate)
-    public void delete_driver(Driver driver) {
-       driverRepository.delete(driver);
-    }
 
     public void delete_driver(Long id) {
         driverRepository.deleteById(id);
     }
-}
+    //update drivers by id
+    public Driver changeDriverById(Long id, Driver driverAtt) {
+        if (driverRepository.existsById(id)) {
+            driverAtt.setId(id);
+            return driverRepository.save(driverAtt);
+        }
+        throw new RuntimeException("Driver not found with ID: " + id); // ✅ explicit failure
+    }
+
+    }
+

@@ -35,15 +35,18 @@ public class driverController {
     public List<Driver> showAllDrivers () {
         return driverService.show_All_Drivers();
     }
+
     //update drivers data (update)
-    @PutMapping("/ChangeId")
-    public String changeDriversForId() {
-        return "change drivers for id";
+    @PutMapping("/Change/{id}")   // ✅ matches @PathVariable name
+    public Driver changeDriverById(@PathVariable Long id, @RequestBody Driver driverAtt) {
+        return driverService.changeDriverById(id, driverAtt);  // ✅ complete call
     }
+
     //delete drivers (delete)
     @DeleteMapping("/DeleteDriver/{id}")
     public void DeleteDriver(@PathVariable Long id) {
       driverService.delete_driver(id);
     }
+
 
 }
