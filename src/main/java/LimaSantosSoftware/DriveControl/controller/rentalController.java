@@ -1,36 +1,52 @@
 package LimaSantosSoftware.DriveControl.controller;
 
+import LimaSantosSoftware.DriveControl.Services.RentalService;
+import LimaSantosSoftware.DriveControl.models.Rental;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping
 
+
 public class rentalController {
-    //add drivers (create)
-    @PostMapping("/RegisterRental")
-    public String registerDriver() {
-        return "Rental registered with sucess!";
+
+
+    @Autowired
+    private RentalService rentalService;
+
+    //show all rentals
+    @GetMapping("/allRentals")
+    public List<Rental> showAllRentals() {
+        return rentalService.show_All_Rentals();
     }
 
-    //search Rental for id (read)
-    @GetMapping("/searchRentals")
-    public String searchDrivers () {
-        return "Rentals found: ";
+    //list rentals for id
+    @GetMapping("/searchRentals/{id}")
+    public Rental show_all_rental_by_id(@PathVariable Long id) {
+        return rentalService.show_all_rental_by_id(id);
     }
-    //show all Rentals(read)
-    @GetMapping("/allRentals")
-    public String showAllDrivers () {
-        return "All Rentals";
+
+    //register rental
+    @PostMapping("/RegisterRental")
+    public Rental registerRental(@RequestBody Rental rental) {
+        return rentalService.register_Rental(rental);
     }
-    //update Rentals data (update)
-    @PutMapping("/{i}")
-    public String changeDriversForId() {
-        return "change Rental for id";
+    //delete rental
+    @DeleteMapping("/DeleteRental/{id}")
+    public void deleteRental(@PathVariable Long id) {
+        rentalService.delete_rental(id);
     }
-    //delete Rentals (delete)
-    @DeleteMapping("/DeleteRental")
-    public String DeleteRental() {
-        return "delete Rental";
+    //update rentals
+    @PutMapping("/Change/{id}")
+    public Rental changeRentalById(@PathVariable Long id, @RequestBody Rental rentalAtt) {
+        return rentalService.ChangeDriverById(id, rentalAtt);
+
     }
+
+
+
 
 }

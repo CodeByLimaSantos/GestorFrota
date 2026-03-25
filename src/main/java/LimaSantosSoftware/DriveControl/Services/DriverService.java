@@ -33,7 +33,7 @@ public class DriverService {
         return driverRepository.save(driver);
     }
 
-    // delete ninjas (delate)
+    // delete drivers (delete)
 
     public void delete_driver(Long id) {
         driverRepository.deleteById(id);
