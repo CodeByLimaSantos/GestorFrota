@@ -8,6 +8,7 @@ import LimaSantosSoftware.DriveControl.models.Vehicle;
 import LimaSantosSoftware.DriveControl.repository.VehicleRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class VehicleService {
 
@@ -32,14 +33,17 @@ public class VehicleService {
     }
 
     //show all vehicles
-    public List<Vehicle> show_all_vehicles() {
-        return vehicleRepository.findAll();
+    public List<VehicleDTO> show_all_vehicles() {
+       List<Vehicle> vehicles = vehicleRepository.findAll();
+       return vehicles.stream()
+               .map(VehicleMapper::map)
+               .collect(Collectors.toList());
     }
 
     //show vehicle for id
-    public Vehicle show_all_vehicles_by_id(Long id) {
+    public VehicleDTO show_all_vehicles_by_id(Long id) {
         Optional<Vehicle> VehiclePorId = vehicleRepository.findById(id);
-        return VehiclePorId.orElse(null);
+        return VehiclePorId.map(VehicleMapper::map).orElse(null);
 
     }
 
@@ -49,10 +53,13 @@ public class VehicleService {
     }
 
     //update vehicle for id
-    public Vehicle ChangeVehicleById(Long id, Vehicle vehicleAtt) {
-        if (vehicleRepository.existsById(id)) {
+    public VehicleDTO ChangeVehicleById(Long id, VehicleDTO vehicleDTO) {
+        Optional<Vehicle> VehicleExistente = vehicleRepository.findById(id);
+        if (VehicleExistente.isPresent()) {
+            Vehicle vehicleAtt = VehicleMapper.map(vehicleDTO);
             vehicleAtt.setId(id);
-            return vehicleRepository.save(vehicleAtt);
+            Vehicle vehiclesaved = vehicleRepository.save(vehicleAtt);
+            return VehicleMapper.map(vehiclesaved);
 
         }
         throw new RuntimeException("Vehicle not found with id : " + id);

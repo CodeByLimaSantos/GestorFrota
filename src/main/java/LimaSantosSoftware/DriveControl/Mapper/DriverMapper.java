@@ -2,10 +2,14 @@ package LimaSantosSoftware.DriveControl.Mapper;
 
 import LimaSantosSoftware.DriveControl.DTO.DriverDTO;
 import LimaSantosSoftware.DriveControl.models.Driver;
+import LimaSantosSoftware.DriveControl.models.Vehicle;
 import org.springframework.stereotype.Component;
+
+import java.util.function.Function;
 
 @Component
 public class DriverMapper {
+
 
     // DTO -> Entity
     public Driver map(DriverDTO driverDTO) {

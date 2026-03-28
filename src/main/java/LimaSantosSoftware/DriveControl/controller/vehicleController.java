@@ -1,8 +1,8 @@
 package LimaSantosSoftware.DriveControl.controller;
 
+import LimaSantosSoftware.DriveControl.DTO.VehicleDTO;
 import LimaSantosSoftware.DriveControl.models.Vehicle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import LimaSantosSoftware.DriveControl.Services.VehicleService;
 import java.util.List;
@@ -17,14 +17,14 @@ public class vehicleController {
     private VehicleService vehicleService;
 
     @GetMapping("/allVehicles")
-    public List<Vehicle> showAllVehicles() {
+    public List<VehicleDTO> showAllVehicles() {
         return vehicleService.show_all_vehicles();
-
     }
 
+
     @PostMapping("/RegisterVehicle")
-    public Vehicle registerVehicle(@RequestBody Vehicle vehicle) {
-        return vehicleService.registerVehicle(vehicle);
+    public VehicleDTO registerVehicle(@RequestBody VehicleDTO vehicleDTO) {
+        return vehicleService.registerVehicle(vehicleDTO);
     }
 
     @DeleteMapping("/DeleteVehicle/{id}")
@@ -33,8 +33,8 @@ public class vehicleController {
     }
 
     @PutMapping("/ChangeVehicle/{id}")
-    public Vehicle changeVehicleById(@PathVariable Long id, @RequestBody Vehicle vehicleAtt) {
-        return vehicleService.ChangeVehicleById(id, vehicleAtt);
+    public VehicleDTO changeVehicleById(@PathVariable Long id, @RequestBody VehicleDTO vehicleDTO) {
+        return vehicleService.ChangeVehicleById(id, vehicleDTO);
     }
 
 
