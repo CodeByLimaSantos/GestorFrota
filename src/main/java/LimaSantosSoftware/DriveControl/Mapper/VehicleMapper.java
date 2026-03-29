@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class VehicleMapper {
 
     // DTO -> Entity
-    public static Vehicle map(VehicleDTO dto) {
+    public Vehicle map(VehicleDTO dto) {
 
         if (dto == null) return null;
 
@@ -43,7 +43,7 @@ public class VehicleMapper {
     }
 
     // Entity -> DTO
-    public static VehicleDTO map(Vehicle vehicle) {
+    public VehicleDTO map(Vehicle vehicle) {
 
         if (vehicle == null) return null;
 
