@@ -1,36 +1,49 @@
 package LimaSantosSoftware.DriveControl.Services;
 
+import LimaSantosSoftware.DriveControl.DTO.DriverDTO;
+import LimaSantosSoftware.DriveControl.Mapper.DriverMapper;
 import LimaSantosSoftware.DriveControl.models.Driver;
+import LimaSantosSoftware.DriveControl.models.Rental;
 import LimaSantosSoftware.DriveControl.repository.DriverRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 
 public class DriverService {
 
+    @Autowired
     private DriverRepository driverRepository;
+    private DriverMapper driverMapper;
 
-    public DriverService(DriverRepository driverRepository) {
+    public DriverService(DriverRepository driverRepository, DriverMapper driverMapper) {
         this.driverRepository = driverRepository;
+        this.driverMapper = driverMapper;
     }
-    // logic to show all  Drivers
-    public List<Driver> show_All_Drivers() {
-        return driverRepository.findAll();
 
+    // logic to show all  Drivers
+    public List<DriverDTO> showAllDrivers() {
+        List<Driver> drivers = driverRepository.findAll();
+        return drivers.stream()
+                .map(driverMapper::map)
+                .collect(Collectors.toList());
     }
     //list drivers for id
-    public Driver show_all_Driver_by_Id(Long id) {
+    public DriverDTO show_all_Driver_by_Id(Long id) {
         Optional<Driver> DriverPorId = driverRepository.findById(id) ;
-        return DriverPorId.orElse(null);
+        return DriverPorId.map(driverMapper::map).orElse(null);
 
     }
     //add drivers (create)
-    public Driver register_Driver(Driver driver) {
-        return driverRepository.save(driver);
+    public DriverDTO register_Driver(DriverDTO driverDTO) {
+        Driver driver = driverMapper.map(driverDTO);
+        driver = driverRepository.save(driver);
+        return driverMapper.map(driver);
+
+
     }
 
     // delete drivers (delete)
@@ -39,10 +52,13 @@ public class DriverService {
         driverRepository.deleteById(id);
     }
     //update drivers by id
-    public Driver changeDriverById(Long id, Driver driverAtt) {
-        if (driverRepository.existsById(id)) {
+    public DriverDTO changeDriverById(Long id, DriverDTO driverDTO) {
+        Optional<Driver> driverExistente = driverRepository.findById(id);
+        if (driverExistente.isPresent()) {
+            Driver driverAtt = driverMapper.map(driverDTO);
             driverAtt.setId(id);
-            return driverRepository.save(driverAtt);
+            Driver driverSaved = driverRepository.save(driverAtt);
+            return driverMapper.map(driverSaved);
         }
         throw new RuntimeException("Driver not found with ID: " + id); // ✅ explicit failure
     }

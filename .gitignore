@@ -34,7 +34,7 @@ build/
 
 ##database config settings, data for temporary tests and some informations on app properties
 
-.MySQLDEMO
+MySQLDEMO/
 application.properties/
 data/
 DatabaseSettings/

@@ -9,7 +9,7 @@ class MySQLDemo {
     public static void main(String[] args) {
         String url = "jdbc:mysql://localhost:3306/testdb?useSSL=false";
         String user = "root";
-        String password = "190204";
+        String password = "root";
 
         try (Connection conn = DriverManager.getConnection(url, user, password);
              Statement stmt = conn.createStatement();
