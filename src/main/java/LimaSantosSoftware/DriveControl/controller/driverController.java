@@ -15,6 +15,7 @@ import java.util.List;
 @Service
 public class driverController {
     // Fixed sintaxe bugs
+
     private DriverService driverService;
     @Autowired
     public driverController(DriverService driverService) {
@@ -39,6 +40,7 @@ public class driverController {
         }
         return ResponseEntity.ok(driverFound); // 200
     }
+
 
     //show all drivers(read)
     @GetMapping("/all")

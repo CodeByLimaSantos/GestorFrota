@@ -19,11 +19,12 @@ public class User {
     private String email;
     @Column(nullable = false,unique = true)
     private String passwordHash;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    public Set<RoleUser> Roles = new HashSet<>();
+    private Set<RoleUser> Roles = new HashSet<>();
 
 }
 
