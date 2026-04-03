@@ -38,6 +38,7 @@ public class rentalController {
 
 
     //register rental
+    @PostMapping("/Register")
     public ResponseEntity<String> registerRental(@RequestBody RentalDTO rentalDTO) {
         RentalDTO newRental = rentalService.register_Rental(rentalDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
