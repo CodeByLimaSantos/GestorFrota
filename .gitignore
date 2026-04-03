@@ -38,3 +38,5 @@ MySQLDEMO/
 application.properties/
 data/
 DatabaseSettings/
+src/main/resources/application.properties
+src/main/resources/db.migrations/
