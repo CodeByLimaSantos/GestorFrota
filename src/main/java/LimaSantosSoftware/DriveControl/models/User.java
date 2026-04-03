@@ -31,9 +31,11 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false)
     private RoleUser role;
 
+    //GERENCIAMENTO DE PERMISSOES
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        if (this.role == RoleUser.ROLE_GESTOR) return List.of(new SimpleGrantedAuthority("GESTOR"), new SimpleGrantedAuthority("OPERATOR"));
+        else return List.of(new SimpleGrantedAuthority("OPERATOR"));
     }
 
     @Override
