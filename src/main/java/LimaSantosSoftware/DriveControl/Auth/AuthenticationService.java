@@ -16,7 +16,9 @@ public class AuthenticationService {
     @Autowired
     private TokenService tokenService;
 
+
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
 
     public String authenticate(AuthenticationDTO dto) {
         User user = userRepository.findByEmail(dto.getEmail())
@@ -28,4 +30,5 @@ public class AuthenticationService {
 
         return tokenService.generateToken(user);
     }
+
 }
