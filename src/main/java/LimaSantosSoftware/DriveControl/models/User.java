@@ -13,8 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @EqualsAndHashCode(of = "id")
 
 public class User implements UserDetails {
@@ -22,43 +20,27 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String passwordHash;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private RoleUser role;
 
-    //GERENCIADOR DE PERMISSOES
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.role == RoleUser.ROLE_GESTOR) {
-            return List.of(
-                    new SimpleGrantedAuthority("ROLE_GESTOR"),
-                    new SimpleGrantedAuthority("ROLE_OPERATOR")
-            );
-        } else {
-            return List.of(
-                    new SimpleGrantedAuthority("ROLE_OPERATOR")
-            );
-        }
+        return List.of();
     }
 
     @Override
     public String getPassword() {
-        return passwordHash;
-    }
-
-    @Override
-    public String getUsername() {
         return username;
     }
 
-    // Esses métodos o Spring exige
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -79,5 +61,3 @@ public class User implements UserDetails {
         return true;
     }
 }
-
-
