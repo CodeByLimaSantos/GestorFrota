@@ -17,6 +17,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class User implements UserDetails {
 
+
+
+    //constructor to registerDTO
+    public User(String username, String email, String password, RoleUser role) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -25,8 +36,7 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false, unique = true)
-    private String passwordHash;
-
+    private String password;
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private RoleUser role;
