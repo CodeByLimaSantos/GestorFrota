@@ -1,5 +1,4 @@
 package LimaSantosSoftware.DriveControl.Auth;
 
-public record LoginResponseDTO(String Token){
-
+public record LoginResponseDTO(String token) {
 }

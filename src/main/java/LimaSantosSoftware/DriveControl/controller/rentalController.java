@@ -38,23 +38,22 @@ public class rentalController {
 
 
     //register rental
-    public ResponseEntity<String> registerRental(@RequestBody RentalDTO rentalDTO) {
+    @PostMapping("/Register")
+    public ResponseEntity<RentalDTO> registerRental(@RequestBody RentalDTO rentalDTO) {
         RentalDTO newRental = rentalService.register_Rental(rentalDTO);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Rental registered with success. (ID) : " + newRental.getId()); // 201
+        return ResponseEntity.status(HttpStatus.CREATED).body(newRental);
     }
 
 
     //delete rental
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteRental(@PathVariable Long id) {
+    public ResponseEntity<?> deleteRental(@PathVariable Long id) {
         if (rentalService.show_all_rental_by_id(id) != null) {
             rentalService.delete_rental(id);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("Rental deleted with success!"); // 200
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Rental not found."); // 404
+                    .body(java.util.Map.of("error", "Rental not found."));
         }
     }
 
@@ -62,11 +61,24 @@ public class rentalController {
     @PutMapping("/{id}")
     public ResponseEntity<?> changeRentalById(@PathVariable Long id, @RequestBody RentalDTO rentalDTO) {
         RentalDTO rental = rentalService.ChangeDriverById(id, rentalDTO);
-        if (rental != null) {
-            return ResponseEntity.ok(rental); // 200
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Rental not found."); // 404
+        return ResponseEntity.ok(rental);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
+        if (ex.getMessage().contains("aluguel")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(java.util.Map.of("error", ex.getMessage()));
         }
+        if (ex.getMessage().contains("not found") || ex.getMessage().contains("não encontrado")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(java.util.Map.of("error", ex.getMessage()));
+        }
+        if (ex.getMessage().contains("incompletos")) {
+            return ResponseEntity.badRequest()
+                    .body(java.util.Map.of("error", ex.getMessage()));
+        }
+        return ResponseEntity.internalServerError()
+                .body(java.util.Map.of("error", ex.getMessage()));
     }
 }

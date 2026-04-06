@@ -12,24 +12,52 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, SecurityFilter securityFilter) throws Exception {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/rentals", "/vehicles", "/drivers").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/Auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/Auth/Register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/rentals/Register").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/rentals/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/rentals/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/Vehicles/Register").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/Vehicles/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/Vehicles/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/Drivers/Register").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/Drivers/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/Drivers/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(List.of("*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean

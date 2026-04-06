@@ -5,6 +5,7 @@ import LimaSantosSoftware.DriveControl.Services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,10 +33,19 @@ public class vehicleController {
 
     // register vehicle
     @PostMapping("/Register")
-    public ResponseEntity<String> registerVehicle(@RequestBody VehicleDTO vehicleDTO) {
+    public ResponseEntity<VehicleDTO> registerVehicle(@RequestBody VehicleDTO vehicleDTO) {
+        // Set defaults for optional fields the form may omit
+        if (vehicleDTO.getStatus() == null) {
+            vehicleDTO.setStatus("AVAILABLE");
+        }
+        if (vehicleDTO.getFuelType() == null) {
+            vehicleDTO.setFuelType("N/A");
+        }
+        if (vehicleDTO.getMileage() == 0) {
+            // 0 is a valid default mileage, leave it
+        }
         VehicleDTO newVehicle = vehicleService.registerVehicle(vehicleDTO);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Vehicle registered with success. (ID) : " + newVehicle.getId()); // 201
+        return ResponseEntity.status(HttpStatus.CREATED).body(newVehicle);
     }
 
     // update vehicle
@@ -60,15 +70,14 @@ public class vehicleController {
     }
     // delete vehicle
     @DeleteMapping("/Delete/{id}")
-    public ResponseEntity<String> DeleteVehicle(@PathVariable Long id) {
+    public ResponseEntity<?> DeleteVehicle(@PathVariable Long id) {
         VehicleDTO vehicle = vehicleService.show_all_vehicles_by_id(id);
         if (vehicle != null) {
             vehicleService.DeleteVehicle(id);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("Vehicle deleted with success!"); // 200
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Vehicle not found."); // 404
+                    .body(java.util.Map.of("error", "Vehicle not found.")); // 404
         }
     }
 }

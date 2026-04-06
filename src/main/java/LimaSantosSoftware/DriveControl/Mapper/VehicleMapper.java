@@ -15,7 +15,9 @@ public class VehicleMapper {
 
         Vehicle vehicle = new Vehicle();
 
-        vehicle.setId(dto.getId());
+        if (dto.getId() != null) {
+            vehicle.setId(dto.getId());
+        }
         vehicle.setLicensePlate(dto.getLicensePlate());
         vehicle.setMake(dto.getMake());
         vehicle.setModel(dto.getModel());
