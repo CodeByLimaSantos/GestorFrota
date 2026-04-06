@@ -1,4 +1,4 @@
-# DriveControl
+
 
 > Sistema fullstack de gestao de aluguel de veiculos com Spring Boot 3 no backend e Angular 18 no frontend.
 
@@ -8,7 +8,7 @@
 
 ## Sobre o Projeto
 
-O **FGestorFrota** e uma aplicacao fullstack para gestao de frotas, permitindo o cadastro e gerenciamento de veiculos, motoristas e aluguéis. O backend e uma API RESTful com autenticacao JWT e controle de acesso baseado em roles. O frontend e SPA com Angular 18, tema escuro e interface 100% responsiva.
+O **GestorFrota** e uma aplicacao fullstack para gestao de frotas, permitindo o cadastro e gerenciamento de veiculos, motoristas e aluguéis. O backend e uma API RESTful com autenticacao JWT e controle de acesso baseado em roles. O frontend e SPA com Angular 18, tema escuro e interface 100% responsiva.
 
 ## Funcionalidades
 
