@@ -8,7 +8,7 @@
 
 ## Sobre o Projeto
 
-O **DriveControl** e uma aplicacao fullstack para gestao de frotas, permitindo o cadastro e gerenciamento de veiculos, motoristas e aluguéis. O backend e uma API RESTful com autenticacao JWT e controle de acesso baseado em roles. O frontend e SPA com Angular 18, tema escuro e interface 100% responsiva.
+O **FGestorFrota** e uma aplicacao fullstack para gestao de frotas, permitindo o cadastro e gerenciamento de veiculos, motoristas e aluguéis. O backend e uma API RESTful com autenticacao JWT e controle de acesso baseado em roles. O frontend e SPA com Angular 18, tema escuro e interface 100% responsiva.
 
 ## Funcionalidades
 
