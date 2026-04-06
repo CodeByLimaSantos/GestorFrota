@@ -16,7 +16,6 @@ O **GestorFrota** e uma aplicacao fullstack para gestao de frotas, permitindo o 
 - Autenticacao JWT com login e registro de usuarios
 - Controle de acesso: **Gestor** faz CRUD completo, **Operador** apenas visualizacao
 - Validacao de conflitos de aluguel (mesmo veiculo/motorista no mesmo periodo)
-- Dashboard com metricas, graficos e tabela de aluguéis recentes
 - Tema escuro/claro com persistencia local e deteccao automatica via `prefers-color-scheme`
 
 ## Stack
@@ -24,7 +23,7 @@ O **GestorFrota** e uma aplicacao fullstack para gestao de frotas, permitindo o 
 | Camada | Tecnologia |
 |--------|-----------|
 | Backend | Java 17, Spring Boot 3.4, Spring Security, Spring Data JPA, auth0 java-jwt, Lombok |
-| Frontend | Angular 18 (standalone), Chart.js, TypeScript, SCSS (CSS vars) |
+| Frontend | Angular 18 (standalone), TypeScript, SCSS (CSS vars) |
 | Banco | MySQL 8 (producao), H2 (dev) |
 | Build | Maven, Angular CLI |
 
