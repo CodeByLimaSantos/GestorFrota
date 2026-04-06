@@ -61,11 +61,24 @@ public class rentalController {
     @PutMapping("/{id}")
     public ResponseEntity<?> changeRentalById(@PathVariable Long id, @RequestBody RentalDTO rentalDTO) {
         RentalDTO rental = rentalService.ChangeDriverById(id, rentalDTO);
-        if (rental != null) {
-            return ResponseEntity.ok(rental); // 200
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(java.util.Map.of("error", "Rental not found."));
+        return ResponseEntity.ok(rental);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
+        if (ex.getMessage().contains("aluguel")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(java.util.Map.of("error", ex.getMessage()));
         }
+        if (ex.getMessage().contains("not found") || ex.getMessage().contains("não encontrado")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(java.util.Map.of("error", ex.getMessage()));
+        }
+        if (ex.getMessage().contains("incompletos")) {
+            return ResponseEntity.badRequest()
+                    .body(java.util.Map.of("error", ex.getMessage()));
+        }
+        return ResponseEntity.internalServerError()
+                .body(java.util.Map.of("error", ex.getMessage()));
     }
 }

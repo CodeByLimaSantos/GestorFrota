@@ -1,330 +1,134 @@
-# GestorFrota
+# DriveControl
 
-> API RESTful para gerenciamento de frota e locação de veículos desenvolvida com Spring Boot.
+> Sistema fullstack de gestao de aluguel de veiculos com Spring Boot 3 no backend e Angular 18 no frontend.
 
 [![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://openjdk.java.net/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.4-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![Maven](https://img.shields.io/badge/Maven-3.0+-blue.svg)](https://maven.apache.org/)
+[![Angular](https://img.shields.io/badge/Angular-18-red.svg)](https://angular.io/)
 
 ## Sobre o Projeto
 
-O **GestorFrota** é um sistema completo de gestão de frota que permite o controle de veículos, motoristas e aluguéis. Desenvolvido como uma API RESTful com arquitetura em camadas bem definida, utilizando DTOs, Mappers, Services e Controllers para melhor organização, manutenibilidade e separação de responsabilidades.
+O **DriveControl** e uma aplicacao fullstack para gestao de frotas, permitindo o cadastro e gerenciamento de veiculos, motoristas e aluguéis. O backend e uma API RESTful com autenticacao JWT e controle de acesso baseado em roles. O frontend e SPA com Angular 18, tema escuro e interface 100% responsiva.
 
----
+## Funcionalidades
 
-## Arquitetura do Sistema
+- CRUD de veiculos, motoristas e aluguéis
+- Autenticacao JWT com login e registro de usuarios
+- Controle de acesso: **Gestor** faz CRUD completo, **Operador** apenas visualizacao
+- Validacao de conflitos de aluguel (mesmo veiculo/motorista no mesmo periodo)
+- Dashboard com metricas, graficos e tabela de aluguéis recentes
+- Tema escuro/claro com persistencia local e deteccao automatica via `prefers-color-scheme`
 
-### Visão Geral
+## Stack
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           API REST (HTTP)                               │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         CONTROLLER LAYER                                │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐         │
-│  │ vehicleController│  │ driverController│  │ rentalController│         │
-│  │ /Vehicles       │  │ /Drivers        │  │ /rentals        │         │
-│  └─────────────────┘  └─────────────────┘  └─────────────────┘         │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                          SERVICE LAYER                                  │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐         │
-│  │ VehicleService  │  │ DriverService   │  │ RentalService   │         │
-│  │ UserService     │  └─────────────────┘  └─────────────────┘         │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                    ┌───────────────┴───────────────┐
-                    ▼                               ▼
-┌─────────────────────────┐           ┌─────────────────────────┐
-│     MAPPER LAYER        │           │     REPOSITORY LAYER    │
-│  ┌───────────────────┐  │           │  ┌───────────────────┐  │
-│  │ VehicleMapper     │  │           │  │ VehicleRepository │  │
-│  │ DriverMapper      │  │           │  │ DriverRepository  │  │
-│  │ RentalMapper      │  │           │  │ RentalRepository  │  │
-│  └───────────────────┘  │           │  │ UserRepository    │  │
-│                         │           │  └───────────────────┘  │
-└─────────────────────────┘           └─────────────────────────┘
-                    │                               │
-                    ▼                               ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           DATA LAYER                                    │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌────────────┐        │
-│  │ Vehicle    │  │ Driver     │  │ Rental     │  │ User       │        │
-│  │ (Entity)   │  │ (Entity)   │  │ (Entity)   │  │ (Entity)   │        │
-│  └────────────┘  └────────────┘  └────────────┘  └────────────┘        │
-└─────────────────────────────────────────────────────────────────────────┘
-                    │
-                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        DATABASE (H2 / MySQL)                            │
-│                    TB_VEHICLES | TB_DRIVERS | TB_RENTALS | TB_USERS     │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+| Camada | Tecnologia |
+|--------|-----------|
+| Backend | Java 17, Spring Boot 3.4, Spring Security, Spring Data JPA, auth0 java-jwt, Lombok |
+| Frontend | Angular 18 (standalone), Chart.js, TypeScript, SCSS (CSS vars) |
+| Banco | MySQL 8 (producao), H2 (dev) |
+| Build | Maven, Angular CLI |
 
-### Fluxo de Dados (Request/Response)
+## Arquitetura do Backend
 
 ```
-┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
-│  Client  │ ──► │ Controller│ ──► │ Service  │ ──► │ Mapper   │ ──► │  Entity  │
-│  (HTTP)  │     │  (REST)   │     │  (Logic) │     │ (DTO↔E)  │     │  (JPA)   │
-└──────────┘     └──────────┘     └──────────┘     └──────────┘     └──────────┘
-                     │                │                │                │
-                     ▼                ▼                ▼                ▼
-              ResponseEntity    Business Rules    Data Transfer    Persistence
-              Status Codes      Validation        Objects          & DB Access
+Controller --> Service --> Mapper --> Repository --> DB
 ```
 
----
+- **Entidades**: `Vehicle`, `Driver`, `Rental`, `User` com relacionamentos `@ManyToOne`
+- **DTOs**: Separam a API das entidades internas; `RentalMapper` resolve `vehicleId` e `driverId` para objetos
+- **Seguranca**: `SecurityFilter` intercepta requisicoes, valida JWT via `TokenService`. `User.getAuthorities()` devolve `ROLE_GESTOR` ou `ROLE_OPERATOR`
+- **Conflitos**: `RentalService` verifica alugueis ativos por veiculo/motorista antes de criar ou atualizar
 
-## Estrutura de Diretórios
+## Estrutura
 
 ```
 DriveControl/
-├── src/
-│   ├── main/
-│   │   ├── java/LimaSantosSoftware/DriveControl/
-│   │   │   ├── DriveControlApplication.java    # Ponto de entrada
-│   │   │   │
-│   │   │   ├── controller/                     # Camada de API REST
-│   │   │   │   ├── vehicleController.java      # GET/POST/PUT/DELETE /Vehicles
-│   │   │   │   ├── driverController.java       # GET/POST/PUT/DELETE /Drivers
-│   │   │   │   ├── rentalController.java       # GET/POST/PUT/DELETE /rentals
-│   │   │   │   └── userController.java         # (Em implementação)
-│   │   │   │
-│   │   │   ├── Services/                       # Regras de Negócio
-│   │   │   │   ├── VehicleService.java
-│   │   │   │   ├── DriverService.java
-│   │   │   │   ├── RentalService.java
-│   │   │   │   └── UserService.java
-│   │   │   │
-│   │   │   ├── repository/                     # Acesso a Dados (JPA)
-│   │   │   │   ├── VehicleRepository.java
-│   │   │   │   ├── DriverRepository.java
-│   │   │   │   ├── RentalRepository.java
-│   │   │   │   └── UserRepository.java
-│   │   │   │
-│   │   │   ├── models/                         # Entidades JPA
-│   │   │   │   ├── Vehicle.java                # TB_VEHICLES
-│   │   │   │   ├── Driver.java                 # TB_DRIVERS
-│   │   │   │   ├── Rental.java                 # TB_RENTALS
-│   │   │   │   ├── User.java                   # TB_USERS
-│   │   │   │   └── RoleUser.java               # Enum de roles
-│   │   │   │
-│   │   │   ├── DTO/                            # Data Transfer Objects
-│   │   │   │   ├── VehicleDTO.java
-│   │   │   │   ├── DriverDTO.java
-│   │   │   │   └── RentalDTO.java
-│   │   │   │
-│   │   │   ├── Mapper/                         # Conversão DTO ↔ Entity
-│   │   │   │   ├── VehicleMapper.java
-│   │   │   │   ├── DriverMapper.java
-│   │   │   │   └── RentalMapper.java
-│   │   │   │
-│   │   │   └── DatabaseSettings/
-│   │   │       └── MySQLDemo.java
-│   │   │
-│   │   └── resources/
-│   │       └── application.properties          # Configurações
-│   │
-│   └── test/
-│       └── java/LimaSantosSoftware/DriveControl/
-│           └── DriveControlApplicationTests.java
-│
-├── pom.xml                                     # Dependências Maven
-├── mvnw / mvnw.cmd                             # Maven Wrapper
-└── README.md
+ +- src/main/java/.../DriveControl/
+ |    +- controller/       # REST endpoints
+ |    +- Services/          # Regras de negocio
+ |    +- Mapper/            # DTO <-> Entity
+ |    +- models/            # Entidades JPA
+ |    +- repository/        # Spring Data JPA
+ |    +- DTO/               # Data Transfer Objects
+ |    +- infra/security/    # JWT filter, config, token
+ |    +- Auth/              # Auth controller e DTOs
+ |
+ +- frontend/
+ |    +- src/app/
+ |    |    +- components/    # Paginas da aplicacao
+ |    |    +- shared/        # Sidebar, toast, services
+ |    |    +- guards/        # auth.guard.ts
+ |    |    +- interceptors/  # auth.interceptor.ts
+ |    +- package.json
 ```
 
----
+## Como Rodar
 
-## Modelos de Dados (Entities)
+### Backend
 
-### Vehicle (TB_VEHICLES)
+1. Crie o banco MySQL `GestorFrota` (ou ajuste `application.properties`)
+2. Defina `JWT_SECRET` como variavel de ambiente (padrao: `my-secret-key`)
+3. Rode com o Maven Wrapper:
 
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| id | Long | ID gerado sequencialmente |
-| licensePlate | String | Placa do veículo (única) |
-| make | String | Marca |
-| model | String | Modelo |
-| year | int | Ano |
-| color | String | Cor |
-| fuelType | String | Tipo de combustível |
-| mileage | int | Quilometragem |
-| weekRate | BigDecimal | Valor semanal |
-| status | Enum | AVAILABLE, RENTED, MAINTENANCE |
-| rental | Rental | Relacionamento com aluguel |
+```bash
+./mvnw spring-boot:run        # Linux/macOS
+mvnw.cmd spring-boot:run      # Windows
+```
 
-### Driver (TB_DRIVERS)
+API disponivel em `http://localhost:8080`
 
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| id | Long | ID gerado sequencialmente |
-| name | String | Nome completo |
-| cnh | String | CNH (única) |
-| cpf | String | CPF (único) |
-| licenseCategory | String | Categoria da habilitação |
-| licenseExpiryDate | String | Validade da CNH |
-| phone | String | Telefone |
-| email | String | E-mail |
-| adress | String | Endereço |
-| status | Enum | ACTIVE, RENTED, ON_HOLD, INACTIVE |
-| rental | Rental | Relacionamento com aluguel |
+### Frontend
 
-### Rental (TB_RENTALS)
+```bash
+cd frontend
+npm install
+ng serve
+```
 
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| id | Long | ID gerado sequencialmente |
-| vehicle | Vehicle | Veículo alugado |
-| driver | Driver | Motorista responsável |
-| startDate | LocalDate | Data de início |
-| endDate | LocalDate | Data de fim |
-| status | Enum | ACTIVE, COMPLETED, CANCELLED |
-
-### User (TB_USERS)
-
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| id | UUID | ID único (UUID) |
-| username | String | Nome de usuário (único) |
-| email | String | E-mail (único) |
-| passwordHash | String | Senha criptografada |
-| roles | Set<RoleUser> | Roles/Permissões |
-
----
-
-## DTOs (Data Transfer Objects)
-
-Os DTOs são utilizados para transferir dados entre as camadas sem expor as entidades diretamente:
-
-- **VehicleDTO** - Dados de veículos (com rentalId em vez do objeto completo)
-- **DriverDTO** - Dados de motoristas
-- **RentalDTO** - Dados de aluguéis (com vehicleId e driverId em vez dos objetos)
-
----
-
-## Mappers
-
-Responsáveis pela conversão entre DTO e Entity:
-
-| Mapper | Função |
-|--------|--------|
-| VehicleMapper | VehicleDTO ↔ Vehicle (converte Enum ↔ String) |
-| DriverMapper | DriverDTO ↔ Driver |
-| RentalMapper | RentalDTO ↔ Rental (resolve relacionamentos por ID) |
-
----
+App disponivel em `http://localhost:4200`
 
 ## Endpoints da API
 
-### Veículos (`/Vehicles`)
+### Autenticacao
 
-| Método | Endpoint | Descrição | Status |
-|--------|----------|-----------|--------|
-| GET | `/Vehicles/all` | Lista todos os veículos | 200 / 204 |
-| GET | `/Vehicles/search/{id}` | Busca veículo por ID | 200 / 404 |
-| POST | `/Vehicles/Register` | Cadastra novo veículo | 201 |
-| PUT | `/Vehicles/Change/{id}` | Atualiza veículo | 200 / 404 |
-| DELETE | `/Vehicles/Delete/{id}` | Exclui veículo | 200 / 404 |
+| Metodo   | Endpoint            | Descricao               |
+|----------|---------------------|-------------------------|
+| `POST`   | `/auth/login`       | Login + retorno JWT     |
+| `POST`   | `/auth/register`    | Registro de usuario     |
 
-### Motoristas (`/Drivers`)
+### Veiculos (`/Vehicles`)
 
-| Método | Endpoint | Descrição | Status |
-|--------|----------|-----------|--------|
-| GET | `/Drivers/all` | Lista todos os motoristas | 200 / 204 |
-| GET | `/Drivers/search/{id}` | Busca motorista por ID | 200 / 404 |
-| POST | `/Drivers/Register` | Cadastra novo motorista | 201 |
-| PUT | `/Drivers/Change/{id}` | Atualiza motorista | 200 / 404 |
-| DELETE | `/Drivers/Delete/{id}` | Exclui motorista | 200 / 404 |
+| Metodo   | Endpoint                   | Descricao              |
+|----------|----------------------------|------------------------|
+| `GET`    | `/Vehicles/all`            | Lista todos            |
+| `GET`    | `/Vehicles/search/{id}`    | Busca por ID           |
+| `POST`   | `/Vehicles/Register`       | Cria novo              |
+| `PUT`    | `/Vehicles/Change/{id}`    | Atualiza               |
+| `DELETE` | `/Vehicles/Delete/{id}`    | Exclui                 |
+
+### Motoristas (`/Drivers`) -- Mesmos padroes
 
 ### Aluguéis (`/rentals`)
 
-| Método | Endpoint | Descrição | Status |
-|--------|----------|-----------|--------|
-| GET | `/rentals/all` | Lista todos os aluguéis | 200 / 204 |
-| GET | `/rentals/{id}` | Busca aluguel por ID | 200 / 404 |
-| PUT | `/rentals/{id}` | Atualiza aluguel | 200 / 404 |
-| DELETE | `/rentals/{id}` | Exclui aluguel | 200 / 404 |
+| Metodo   | Endpoint                   | Descricao                   |
+|----------|----------------------------|-----------------------------|
+| `GET`    | `/rentals/all`             | Lista todos                 |
+| `GET`    | `/rentals/{id}`            | Busca por ID                |
+| `POST`   | `/rentals/Register`        | Cria novo                   |
+| `PUT`    | `/rentals/{id}`            | Atualiza                    |
+| `DELETE` | `/rentals/{id}`            | Exclui                      |
+
+## Modelos
+
+**Vehicle** (`TB_VEHICLES`) -- placa (unico), marca, modelo, ano, cor, combustivel, km, valor semanal, status (`AVAILABLE` / `RENTED` / `MAINTENANCE`)
+
+**Driver** (`TB_DRIVERS`) -- nome, CNH (unico), CPF (unico), categoria, validade, telefone, email, status (`ACTIVE` / `RENTED` / `ON_HOLD` / `INACTIVE`)
+
+**Rental** (`TB_RENTALS`) -- veiculo (FK), motorista (FK), inicio, fim, status (`ACTIVE` / `COMPLETED` / `CANCELLED`)
+
+**User** (`TB_USERS`) -- username, email, senha (BCrypt), role (`ROLE_GESTOR` / `ROLE_OPERATOR`), id UUID
 
 ---
-
-## Tecnologias Utilizadas
-
-- **Java 17** - Linguagem principal
-- **Spring Boot 3.4.4** - Framework principal
-- **Spring Web MVC** - API REST
-- **Spring Data JPA** - Persistência de dados
-- **Hibernate** - ORM
-- **Lombok** - Redução de boilerplate (@Data, @Entity, etc.)
-- **H2 Database** - Banco em memória (desenvolvimento)
-- **MySQL 8** - Banco de dados (produção)
-- **Maven** - Gerenciamento de dependências
-
----
-
-## Pré-requisitos
-
-- Java 17 ou superior
-- Maven 3.0+
-
----
-
-## Instalação
-
-### 1. Clone o repositório
-
-```bash
-git clone https://github.com/codebylimasantos/GestorFrota.git
-cd GestorFrota
-```
-
-### 2. Build e execução
-
-```bash
-# Windows
-mvnw.cmd clean install
-mvnw.cmd spring-boot:run
-
-# Linux/Mac
-./mvnw clean install
-./mvnw spring-boot:run
-```
-
-A API estará disponível em `http://localhost:8080`
-
----
-
-## Roadmap
-
-- [ ] Implementar autenticação com Spring Security
-- [ ] Implementar frontend fullstack com Angular
-- [ ] Adicionar validações de negócio (CNH, CPF, datas)
-- [ ] Documentação com Swagger/OpenAPI
-- [ ] Testes unitários e de integração
-- [ ] Dockerização da aplicação
-
----
-
-## Autor
 
 **Guilherme Lima Santos**
-
-- GitHub: [@codebylimasantos](https://github.com/codebylimasantos)
-
----
-
-## Licença
-
-Este projeto está sob a licença MIT.
-
----
-
-<p align="center">
-  <strong>Desenvolvido com ☕ Java e Spring Boot</strong>
-</p>
+[GitHub](https://github.com/codebylimasantos) -- Licenca MIT

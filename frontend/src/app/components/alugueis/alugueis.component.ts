@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { forkJoin } from 'rxjs';
+import { forkJoin, catchError, of, map } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../shared/services/toast.service';
@@ -143,8 +143,8 @@ interface Aluguel {
           <div class="form-group">
             <label class="form-label">Veículo</label>
             <select class="form-control" [(ngModel)]="form.vehicleId" name="vehicleId">
-              <option [ngValue]="null">Selecione um veículo...</option>
-              <option *ngFor="let v of veiculosDisponiveis" [ngValue]="v.id">
+              <option [value]="0">Selecione um veículo...</option>
+              <option *ngFor="let v of veiculosDisponiveis" [value]="v.id">
                 {{ v.licensePlate }} — {{ v.make }} {{ v.model }}
               </option>
             </select>
@@ -174,7 +174,7 @@ interface Aluguel {
               <option value="CANCELLED">Cancelado</option>
             </select>
           </div>
-          <div *ngIf="formError" class="validation-error">
+          <div *ngIf="formError" class="validation-error" [class.validation-error-conflict]="isConflictError()">
             {{ formError }}
           </div>
         </div>
@@ -224,6 +224,11 @@ interface Aluguel {
       padding: var(--space-3);
       margin-top: var(--space-2);
     }
+    .validation-error-conflict {
+      background: var(--color-warning-50);
+      border-color: var(--color-warning-500);
+      color: var(--color-warning-700);
+    }
   `]
 })
 export class AlugueisComponent implements OnInit {
@@ -265,23 +270,31 @@ export class AlugueisComponent implements OnInit {
     this.loading = true;
     this.loadError = false;
 
+    // Each observable converts 404/204 errors to empty arrays so forkJoin doesn't fail
+    const rentals$ = this.apiService.getAlugueis().pipe(
+      map((data: any) => data || []),
+      catchError(() => of([]))
+    );
+    const vehicles$ = this.apiService.getVeiculos().pipe(
+      map((data: any) => data || []),
+      catchError(() => of([]))
+    );
+    const drivers$ = this.apiService.getMotoristas().pipe(
+      map((data: any) => data || []),
+      catchError(() => of([]))
+    );
+
     forkJoin({
-      alugueis: this.apiService.getAlugueis(),
-      vehicles: this.apiService.getVeiculos(),
-      drivers: this.apiService.getMotoristas()
+      alugueis: rentals$,
+      vehicles: vehicles$,
+      drivers: drivers$
     }).subscribe({
       next: ({ alugueis, vehicles, drivers }) => {
         this.alugueis = alugueis;
         this.veiculos = vehicles;
         this.motoristas = drivers;
-
-        // Filter available vehicles and active drivers
-        this.veiculosDisponiveis = this.veiculos.filter(
-          v => v.status?.toUpperCase() === 'AVAILABLE'
-        );
-        this.motoristasDisponiveis = this.motoristas.filter(
-          m => m.status?.toUpperCase() === 'ACTIVE'
-        );
+        this.veiculosDisponiveis = vehicles;
+        this.motoristasDisponiveis = drivers;
         this.loading = false;
       },
       error: (err) => {
@@ -364,7 +377,7 @@ export class AlugueisComponent implements OnInit {
   }
 
   saveAluguel(): void {
-    this.formError = this.validateForm();
+    this.formError = this.validateForm() ?? '';
     if (this.formError) return;
 
     this.saving = true;
@@ -376,8 +389,8 @@ export class AlugueisComponent implements OnInit {
           this.closeModal();
           this.saving = false;
         },
-        error: () => {
-          this.toast.error('Erro ao atualizar aluguel');
+        error: (err) => {
+          this.formError = this.extractErrorMessage(err);
           this.saving = false;
         }
       });
@@ -391,11 +404,21 @@ export class AlugueisComponent implements OnInit {
         },
         error: (err) => {
           console.error('Erro ao criar aluguel:', err);
-          this.toast.error('Erro ao criar aluguel');
+          this.formError = this.extractErrorMessage(err);
           this.saving = false;
         }
       });
     }
+  }
+
+  private extractErrorMessage(err: any): string {
+    if (err?.error?.error) return err.error.error;
+    if (err?.error?.message) return err.error.message;
+    return 'Erro ao processar a requisição. Verifique os dados e tente novamente.';
+  }
+
+  isConflictError(): boolean {
+    return this.formError.includes('aluguel');
   }
 
   deleteAluguel(id: number): void {

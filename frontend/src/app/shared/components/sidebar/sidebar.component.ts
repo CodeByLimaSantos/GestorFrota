@@ -44,9 +44,9 @@ export interface SidebarNavItem {
                 <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
               </svg>
               <svg *ngSwitchCase="'vehicles'" class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9Z"/><path d="M21 18V6a2 2 0 0 0-2-2H5"/>
-                <path d="M3 13v3c0 .6.4 1 1 1h2"/><path d="M10 17h6"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>
-                <path d="M2 14a2 2 0 0 1 2-2h3v9H4a2 2 0 0 1-2-2Z"/><path d="M21 13h-4V4h2c1.1 0 2 .9 2 2z"/>
+                <path d="M5 17h14v-5l-1.5-3.5A2 2 0 0 0 15.7 7H8.3a2 2 0 0 0-1.8 1.5L5 12v5z"/>
+                <circle cx="7.5" cy="17" r="1.5"/>
+                <circle cx="16.5" cy="17" r="1.5"/>
               </svg>
               <svg *ngSwitchCase="'drivers'" class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
