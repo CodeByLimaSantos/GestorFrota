@@ -16,8 +16,8 @@
     <groupId>com.limasantossoftware</groupId>
     <artifactId>drivecontrol</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>DriveControl</name>
-    <description>API for vehicle rental</description>
+    <name>GestorFrota</name>
+    <description>Sistema de gestão de aluguel de veículos</description>
 
     <properties>
         <java.version>17</java.version>

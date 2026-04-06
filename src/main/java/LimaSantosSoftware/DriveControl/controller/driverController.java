@@ -2,6 +2,7 @@ package LimaSantosSoftware.DriveControl.controller;
 
 import LimaSantosSoftware.DriveControl.DTO.DriverDTO;
 import LimaSantosSoftware.DriveControl.Services.DriverService;
+import LimaSantosSoftware.DriveControl.models.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/Drivers")
-@Service
 public class driverController {
     // Fixed sintaxe bugs
 
@@ -24,10 +25,22 @@ public class driverController {
 
     //add drivers (create)
     @PostMapping("/Register")
-    public ResponseEntity<String> registerDriver(@RequestBody  DriverDTO driver) {
+    public ResponseEntity<DriverDTO> registerDriver(@RequestBody  DriverDTO driver) {
+        // Set defaults for required fields the simple form may omit
+        if (driver.getCpf() == null || driver.getCpf().isBlank()) {
+            driver.setCpf(UUID.randomUUID().toString().substring(0, 11));
+        }
+        if (driver.getLicenseCategory() == null || driver.getLicenseCategory().isBlank()) {
+            driver.setLicenseCategory("N/A");
+        }
+        if (driver.getLicenseExpiryDate() == null || driver.getLicenseExpiryDate().isBlank()) {
+            driver.setLicenseExpiryDate("2030-01-01");
+        }
+        if (driver.getStatus() == null) {
+            driver.setStatus(Driver.DriverStatus.ACTIVE);
+        }
         DriverDTO newDriver = driverService.register_Driver(driver);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Driver registered with sucess." + newDriver.getName() + "(ID) : " + newDriver.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(newDriver);
     }
 
 
@@ -63,26 +76,21 @@ public class driverController {
             return ResponseEntity.ok(driver);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Driver not found.");
+                    .body(java.util.Map.of("error", "Driver not found."));
         }
     }
 
     //delete drivers (delete)
     @DeleteMapping("/Delete/{id}")
-    public ResponseEntity<String> DeleteDriver(@PathVariable Long id) {
+    public ResponseEntity<?> DeleteDriver(@PathVariable Long id) {
       if (driverService.show_all_Driver_by_Id(id) != null) {
           driverService.delete_driver(id);
-          return ResponseEntity.status(HttpStatus.OK)
-                  .body("Driver deleted with sucess!");
+          return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
       }
       else {
           return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                  .body("Driver not found.");
+                  .body(java.util.Map.of("error", "Driver not found."));
       }
-
-
-
     }
-
 
 }

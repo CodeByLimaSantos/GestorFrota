@@ -44,13 +44,13 @@ public class User implements UserDetails {
     //GERENCIAMENTO DE PERMISSOES
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.role == RoleUser.ROLE_GESTOR) return List.of(new SimpleGrantedAuthority("GESTOR"), new SimpleGrantedAuthority("OPERATOR"));
-        else return List.of(new SimpleGrantedAuthority("OPERATOR"));
+        if (this.role == RoleUser.ROLE_GESTOR) return List.of(new SimpleGrantedAuthority("ROLE_GESTOR"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_OPERATOR"));
     }
 
     @Override
     public String getPassword() {
-        return username;
+        return password;
     }
 
     @Override

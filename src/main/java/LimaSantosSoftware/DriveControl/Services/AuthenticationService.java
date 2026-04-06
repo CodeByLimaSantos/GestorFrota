@@ -9,9 +9,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-@Configuration
-@EnableWebSecurity
-
 public class AuthenticationService implements UserDetailsService {
 
     @Autowired

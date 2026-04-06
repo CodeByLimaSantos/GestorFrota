@@ -39,23 +39,21 @@ public class rentalController {
 
     //register rental
     @PostMapping("/Register")
-    public ResponseEntity<String> registerRental(@RequestBody RentalDTO rentalDTO) {
+    public ResponseEntity<RentalDTO> registerRental(@RequestBody RentalDTO rentalDTO) {
         RentalDTO newRental = rentalService.register_Rental(rentalDTO);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Rental registered with success. (ID) : " + newRental.getId()); // 201
+        return ResponseEntity.status(HttpStatus.CREATED).body(newRental);
     }
 
 
     //delete rental
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteRental(@PathVariable Long id) {
+    public ResponseEntity<?> deleteRental(@PathVariable Long id) {
         if (rentalService.show_all_rental_by_id(id) != null) {
             rentalService.delete_rental(id);
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("Rental deleted with success!"); // 200
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Rental not found."); // 404
+                    .body(java.util.Map.of("error", "Rental not found."));
         }
     }
 
@@ -67,7 +65,7 @@ public class rentalController {
             return ResponseEntity.ok(rental); // 200
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Rental not found."); // 404
+                    .body(java.util.Map.of("error", "Rental not found."));
         }
     }
 }
