@@ -6,7 +6,6 @@
 
 - **Angular 18** — componentes standalone, lazy loading, guards
 - **TypeScript** — tipagem forte nos servicos e componentes
-- **Chart.js** — graficos no dashboard (barras, pizza, linha)
 - **SCSS + CSS Custom Properties** — design system com tema claro/escuro
 - **Angular Router** — rotas protegidas com `authGuard`
 - **HttpInterceptor** — injecao automatica de Bearer token JWT
@@ -73,14 +72,6 @@ Output em `dist/gestorfrota-frontend/`
 - Registro com selecao de role (GESTOR/OPERADOR)
 - Interceptor HTTP injeta `Bearer <token>` automaticamente
 - Guard redireciona para `/login` se nao autenticado
-
-### Dashboard
-- 4 cards de metricas (motoristas, veiculos, aluguéis ativos, receita)
-- Grafico de barras — aluguéis por mes (ultimos 12 meses)
-- Grafico de pizza — status de veiculos (disponivel, alugado, manutencao)
-- Grafico de linha — receita mensal
-- Grafico horizontal — top 5 veiculos mais alugados
-- Tabela dos ultimos 10 aluguéis com status coloridos
 
 ### CRUD Pages
 - Tabela com dados reais da API
