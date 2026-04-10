@@ -20,10 +20,7 @@ public class rentalController {
     @GetMapping("/all")
     public ResponseEntity<List<RentalDTO>> showAllRentals() {
         List<RentalDTO> rentals = rentalService.show_All_Rentals();
-        if (rentals.isEmpty()) {
-            return ResponseEntity.noContent().build(); // 204
-        }
-        return ResponseEntity.ok(rentals); // 200
+        return ResponseEntity.ok(rentals);
     }
 
     //list rentals for id
@@ -66,6 +63,10 @@ public class rentalController {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
+        if (ex.getMessage().contains("manutenção")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(java.util.Map.of("error", ex.getMessage()));
+        }
         if (ex.getMessage().contains("aluguel")) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(java.util.Map.of("error", ex.getMessage()));

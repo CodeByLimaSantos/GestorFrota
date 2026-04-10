@@ -958,7 +958,7 @@ body {
 .dark {
   /* Neutral palette — dark surface */
   --color-gray-50: #1e293b;
-  --color-gray-100: #1e293b;
+  --color-gray-100: #243447;
   --color-gray-200: #334155;
   --color-gray-300: #475569;
   --color-gray-400: #64748b;
@@ -1120,7 +1120,7 @@ body {
 }
 
 .dark tbody tr:hover {
-  background-color: #1e293b;
+  background-color: #243447;
 }
 
 .dark .modal-overlay {
@@ -1161,6 +1161,62 @@ body {
 
 .dark .empty-state-text {
   color: #64748b;
+}
+
+/* Buttons — keep vivid colors for readable contrast on dark bg */
+.dark .btn-primary {
+  background-color: #6366f1;
+  color: white;
+}
+.dark .btn-primary:hover:not(:disabled) {
+  background-color: #4f46e5;
+}
+
+.dark .btn-success {
+  background-color: #22c55e;
+  color: white;
+}
+.dark .btn-success:hover:not(:disabled) {
+  background-color: #16a34a;
+}
+
+.dark .btn-danger {
+  background-color: #ef4444;
+  color: white;
+}
+.dark .btn-danger:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+/* Stat card accent bar — keep vivid indigo */
+.dark .stat-card.blue::after {
+  background: #6366f1;
+}
+
+/* Badge-gray — visible against card bg */
+.dark .badge-gray {
+  background-color: #334155;
+}
+
+/* Donut chart ring background — visible against card bg */
+.dark .donut-bg {
+  stroke: #334155;
+}
+
+/* Legend item hover — visible against card bg */
+.dark .legend-item:hover {
+  background: #243447;
+}
+
+/* Sidebar user name — needs light text on always-dark sidebar */
+.dark .user-name {
+  color: #cbd5e1;
+}
+
+/* Sidebar avatar — keep vivid indigo for readable initials */
+.dark .user-avatar,
+.dark .user-avatar-sm {
+  background: #6366f1;
 }
 
 .error-state {

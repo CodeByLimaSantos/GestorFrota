@@ -29,7 +29,7 @@ interface CreateRentalDTO {
   startDate: string;  // YYYY-MM-DD
   endDate: string;    // YYYY-MM-DD
 
-  status: 'ACTIVE' | 'COMPLETED' | 'CANCELLED';
+  status: 'ACTIVE' | 'CLOSED' | 'CANCELLED';
 }
 
 interface Aluguel {
@@ -170,7 +170,7 @@ interface Aluguel {
             <label class="form-label">Status</label>
             <select class="form-control" [(ngModel)]="form.status" name="status">
               <option value="ACTIVE">Ativo</option>
-              <option value="COMPLETED">Finalizado</option>
+              <option value="CLOSED">Encerrado</option>
               <option value="CANCELLED">Cancelado</option>
             </select>
           </div>
@@ -293,7 +293,13 @@ export class AlugueisComponent implements OnInit {
         this.alugueis = alugueis;
         this.veiculos = vehicles;
         this.motoristas = drivers;
-        this.veiculosDisponiveis = vehicles;
+        // Filter out vehicles in MAINTENANCE or already RENTED so they cannot be selected for new rentals
+        this.veiculosDisponiveis = vehicles.filter(
+          (v: VehicleOption) => {
+            const s = v.status?.toUpperCase();
+            return s !== 'MAINTENANCE' && s !== 'RENTED';
+          }
+        );
         this.motoristasDisponiveis = drivers;
         this.loading = false;
       },
@@ -328,7 +334,7 @@ export class AlugueisComponent implements OnInit {
   statusClass(status: string): string {
     const s = status?.toLowerCase() || '';
     if (s === 'active') return 'badge-success';
-    if (s === 'completed') return 'badge-info';
+    if (s === 'closed') return 'badge-info';
     if (s === 'cancelled') return 'badge-error';
     return 'badge-gray';
   }
@@ -336,7 +342,7 @@ export class AlugueisComponent implements OnInit {
   statusLabel(status: string): string {
     const s = status?.toUpperCase() || '';
     if (s === 'ACTIVE') return 'Ativo';
-    if (s === 'COMPLETED') return 'Finalizado';
+    if (s === 'CLOSED') return 'Encerrado';
     if (s === 'CANCELLED') return 'Cancelado';
     return status;
   }
@@ -354,12 +360,21 @@ export class AlugueisComponent implements OnInit {
 
   editAluguel(aluguel: Aluguel): void {
     this.form = {
+      id: aluguel.id,
       vehicleId: aluguel.vehicleId ?? 0,
       driverId: aluguel.driverId ?? 0,
       startDate: aluguel.startDate.split('T')[0],
       endDate: aluguel.endDate.split('T')[0],
-      status: aluguel.status as 'ACTIVE' | 'COMPLETED' | 'CANCELLED'
+      status: aluguel.status as 'ACTIVE' | 'CLOSED' | 'CANCELLED'
     };
+    // When editing, ensure the current vehicle appears in the dropdown even if RENTED
+    const currentVehicleId = aluguel.vehicleId;
+    this.veiculosDisponiveis = this.veiculos.filter(
+      (v: VehicleOption) => {
+        const s = v.status?.toUpperCase();
+        return v.id === currentVehicleId || (s !== 'MAINTENANCE' && s !== 'RENTED');
+      }
+    );
     this.formError = '';
     this.editMode = true;
     this.showModal = true;

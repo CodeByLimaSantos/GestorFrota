@@ -50,6 +50,7 @@ interface Veiculo {
               <th>Ano</th>
               <th>Placa</th>
               <th>Cor</th>
+              <th>Status</th>
               <th *ngIf="isGestor">A\u00e7\u00f5es</th>
             </tr>
           </thead>
@@ -60,6 +61,11 @@ interface Veiculo {
               <td>{{ veiculo.year }}</td>
               <td><span class="badge badge-gray">{{ veiculo.licensePlate }}</span></td>
               <td>{{ veiculo.color }}</td>
+              <td>
+                <span class="badge" [class]="vehicleStatusClass(veiculo.status)">
+                  {{ vehicleStatusLabel(veiculo.status) }}
+                </span>
+              </td>
               <td *ngIf="isGestor">
                 <div class="actions-group">
                   <button class="btn btn-outline btn-sm" (click)="editVeiculo(veiculo)">
@@ -123,6 +129,16 @@ interface Veiculo {
             <label class="form-label">Cor</label>
             <input type="text" class="form-control" [(ngModel)]="form.color" name="color" required placeholder="Ex: Prata">
           </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <div *ngIf="editMode && form.status === 'RENTED'" class="form-control-static badge badge-info">
+              Alugado
+            </div>
+            <select *ngIf="!(editMode && form.status === 'RENTED')" class="form-control" [(ngModel)]="form.status" name="status">
+              <option value="AVAILABLE">Dispon\u00edvel</option>
+              <option value="MAINTENANCE">Manuten\u00e7\u00e3o</option>
+            </select>
+          </div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-outline" (click)="closeModal()">Cancelar</button>
@@ -140,6 +156,13 @@ interface Veiculo {
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .form-control-static {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: var(--text-sm);
+      font-weight: var(--font-semibold);
+      cursor: default;
+    }
   `]
 })
 export class VeiculosComponent implements OnInit {
@@ -150,7 +173,7 @@ export class VeiculosComponent implements OnInit {
   loading = true;
   saving = false;
 
-  form: Veiculo = { model: '', make: '', year: new Date().getFullYear(), licensePlate: '', color: '' };
+  form: Veiculo = { model: '', make: '', year: new Date().getFullYear(), licensePlate: '', color: '', status: 'AVAILABLE' };
 
   constructor(
     private authService: AuthService,
@@ -166,14 +189,14 @@ export class VeiculosComponent implements OnInit {
   loadVeiculos(): void {
     this.loading = true;
     this.apiService.getVeiculos().subscribe({
-      next: (data) => this.veiculos = data,
+      next: (data) => this.veiculos = data || [],
       complete: () => this.loading = false,
       error: () => { this.toast.error('Erro ao carregar ve\u00edculos'); this.loading = false; }
     });
   }
 
   openModal(): void {
-    this.form = { model: '', make: '', year: new Date().getFullYear(), licensePlate: '', color: '' };
+    this.form = { model: '', make: '', year: new Date().getFullYear(), licensePlate: '', color: '', status: 'AVAILABLE' };
     this.editMode = false;
     this.showModal = true;
   }
@@ -198,8 +221,9 @@ export class VeiculosComponent implements OnInit {
           this.closeModal();
           this.saving = false;
         },
-        error: () => {
-          this.toast.error('Erro ao atualizar ve\u00edculo');
+        error: (err) => {
+          const msg = err?.error?.error || 'Erro ao atualizar ve\u00edculo';
+          this.toast.error(msg);
           this.saving = false;
         }
       });
@@ -211,8 +235,9 @@ export class VeiculosComponent implements OnInit {
           this.closeModal();
           this.saving = false;
         },
-        error: () => {
-          this.toast.error('Erro ao criar ve\u00edculo');
+        error: (err) => {
+          const msg = err?.error?.error || 'Erro ao criar ve\u00edculo';
+          this.toast.error(msg);
           this.saving = false;
         }
       });
@@ -220,14 +245,33 @@ export class VeiculosComponent implements OnInit {
   }
 
   deleteVeiculo(id: string): void {
-    if (confirm('Tem certeza que deseja excluir este ve\u00edculo?')) {
+    if (confirm('Tem certeza que deseja excluir este veículo?')) {
       this.apiService.deleteVeiculo(id).subscribe({
         next: () => {
-          this.toast.success('Ve\u00edculo exclu\u00eddo com sucesso!');
+          this.toast.success('Veículo excluído com sucesso!');
           this.loadVeiculos();
         },
-        error: () => this.toast.error('Erro ao excluir ve\u00edculo')
+        error: (err) => {
+          const msg = err?.error?.error || 'Erro ao excluir veículo';
+          this.toast.error(msg);
+        }
       });
     }
+  }
+
+  vehicleStatusClass(status?: string): string {
+    const s = status?.toUpperCase() || '';
+    if (s === 'AVAILABLE') return 'badge-success';
+    if (s === 'RENTED') return 'badge-info';
+    if (s === 'MAINTENANCE') return 'badge-warning';
+    return 'badge-gray';
+  }
+
+  vehicleStatusLabel(status?: string): string {
+    const s = status?.toUpperCase() || '';
+    if (s === 'AVAILABLE') return 'Dispon\u00edvel';
+    if (s === 'RENTED') return 'Alugado';
+    if (s === 'MAINTENANCE') return 'Manuten\u00e7\u00e3o';
+    return status || 'N/A';
   }
 }

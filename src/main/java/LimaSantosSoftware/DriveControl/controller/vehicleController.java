@@ -5,7 +5,6 @@ import LimaSantosSoftware.DriveControl.Services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,10 +24,7 @@ public class vehicleController {
     @GetMapping("/all")
     public ResponseEntity<List<VehicleDTO>> showAllVehicles() {
         List<VehicleDTO> vehicles = vehicleService.show_all_vehicles();
-        if (vehicles.isEmpty()) {
-            return ResponseEntity.noContent().build(); // 204
-        }
-        return ResponseEntity.ok(vehicles); // 200
+        return ResponseEntity.ok(vehicles);
     }
 
     // register vehicle
@@ -79,5 +75,26 @@ public class vehicleController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(java.util.Map.of("error", "Vehicle not found.")); // 404
         }
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
+        String msg = ex.getMessage();
+        if (msg != null && (msg.contains("alugado") || msg.contains("aluguel"))) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(java.util.Map.of("error", msg));
+        }
+        if (msg != null && msg.contains("not found")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(java.util.Map.of("error", msg));
+        }
+        return ResponseEntity.internalServerError()
+                .body(java.util.Map.of("error", msg != null ? msg : "Erro interno"));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest()
+                .body(java.util.Map.of("error", ex.getMessage()));
     }
 }

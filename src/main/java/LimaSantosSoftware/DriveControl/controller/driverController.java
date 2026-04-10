@@ -6,7 +6,6 @@ import LimaSantosSoftware.DriveControl.models.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,7 +36,7 @@ public class driverController {
             driver.setLicenseExpiryDate("2030-01-01");
         }
         if (driver.getStatus() == null) {
-            driver.setStatus(Driver.DriverStatus.ACTIVE);
+            driver.setStatus(Driver.DriverStatus.WAITING);
         }
         DriverDTO newDriver = driverService.register_Driver(driver);
         return ResponseEntity.status(HttpStatus.CREATED).body(newDriver);
@@ -59,12 +58,7 @@ public class driverController {
     @GetMapping("/all")
     public ResponseEntity<List<DriverDTO>> showAllDrivers () {
     List<DriverDTO> drivers = driverService.showAllDrivers();
-    if (drivers.isEmpty()) {
-        return ResponseEntity.noContent().build();
-         }
-    else                  {
-        return ResponseEntity.ok(drivers);
-        }
+    return ResponseEntity.ok(drivers);
     }
 
     //update drivers data (update)

@@ -62,14 +62,24 @@ export interface SidebarNavItem {
 
       <div class="sidebar-footer">
         <div class="sidebar-user" *ngIf="!collapsed && authService.isAuthenticated()">
-          <div class="user-avatar">{{ userInitial }}</div>
+          <div class="user-avatar">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M 12 14 C 8 14 5 16.5 5 20 L 5 22 L 19 22 L 19 20 C 19 16.5 16 14 12 14 Z"/>
+            </svg>
+          </div>
           <div class="user-info">
             <span class="user-name">{{ userName }}</span>
             <span class="user-role">{{ userRole }}</span>
           </div>
         </div>
         <div class="sidebar-user-collapsed" *ngIf="collapsed && authService.isAuthenticated()">
-          <div class="user-avatar-sm">{{ userInitial }}</div>
+          <div class="user-avatar-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M 12 14 C 8 14 5 16.5 5 20 L 5 22 L 19 22 L 19 20 C 19 16.5 16 14 12 14 Z"/>
+            </svg>
+          </div>
         </div>
       </div>
     </aside>
@@ -196,6 +206,11 @@ export interface SidebarNavItem {
       font-weight: var(--font-semibold);
       flex-shrink: 0;
     }
+    .user-avatar svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
     .user-info {
       display: flex;
       flex-direction: column;
@@ -245,13 +260,11 @@ export class SidebarComponent {
   collapsed = false;
   userName = '';
   userRole = '';
-  userInitial = '?';
 
   constructor(public authService: AuthService) {
     authService.currentUser$.subscribe(user => {
       this.userName = user?.username || '';
       this.userRole = user?.role || 'OPERADOR';
-      this.userInitial = this.userName?.charAt(0).toUpperCase() || '?';
     });
   }
 

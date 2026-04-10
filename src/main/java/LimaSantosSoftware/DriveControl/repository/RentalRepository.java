@@ -8,9 +8,20 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface RentalRepository extends JpaRepository<Rental, Long> {
+
+    long countByStatus(Rental.RentalStatus status);
+
+    /** Returns all vehicle IDs that have at least one ACTIVE rental */
+    @Query("SELECT DISTINCT r.vehicle.id FROM Rental r WHERE r.status = 'ACTIVE'")
+    Set<Long> findVehicleIdsWithActiveRental();
+
+    /** Check if a specific vehicle has any ACTIVE rental */
+    @Query("SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END FROM Rental r WHERE r.vehicle.id = :vehicleId AND r.status = 'ACTIVE'")
+    boolean hasActiveRentalForVehicle(@Param("vehicleId") Long vehicleId);
 
     @Query("SELECT r FROM Rental r WHERE r.vehicle.id = :vehicleId " +
            "AND r.status = 'ACTIVE' " +

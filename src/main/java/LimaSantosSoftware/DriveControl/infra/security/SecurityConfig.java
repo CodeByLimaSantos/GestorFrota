@@ -29,17 +29,26 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        // Auth
                         .requestMatchers(HttpMethod.POST, "/Auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Auth/Register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/rentals/Register").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/rentals/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/rentals/**").permitAll()
+                        // Vehicles
+                        .requestMatchers(HttpMethod.GET, "/Vehicles/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Vehicles/Register").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/Vehicles/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/Vehicles/**").permitAll()
+                        // Drivers
+                        .requestMatchers(HttpMethod.GET, "/Drivers/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Drivers/Register").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/Drivers/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/Drivers/**").permitAll()
+                        // Rentals
+                        .requestMatchers(HttpMethod.GET, "/rentals/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/rentals/Register").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/rentals/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/rentals/**").permitAll()
+                        // Dashboard
+                        .requestMatchers(HttpMethod.GET, "/dashboard/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

@@ -27,5 +27,10 @@
     "@angular/cli": "^18.0.0",
     "@angular/compiler-cli": "^18.0.0",
     "typescript": "~5.4.0"
-  }
+  },
+  "description": "> Interface Angular 18 para o sistema de gestao de aluguel de veiculos DriveControl.",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

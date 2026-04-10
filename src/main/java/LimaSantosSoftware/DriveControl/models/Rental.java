@@ -38,7 +38,7 @@ public class Rental {
 
     public enum RentalStatus {
         ACTIVE,
-        COMPLETED,
+        CLOSED,
         CANCELLED
     }
 

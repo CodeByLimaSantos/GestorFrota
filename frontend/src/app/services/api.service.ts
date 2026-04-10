@@ -2,11 +2,31 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface DashboardStats {
+  totalVehicles: number;
+  vehiclesAvailable: number;
+  vehiclesRented: number;
+  vehiclesMaintenance: number;
+  totalDrivers: number;
+  driversOnRental: number;
+  driversWaiting: number;
+  driversInactive: number;
+  totalRentals: number;
+  rentalsActive: number;
+  rentalsClosed: number;
+  rentalsCancelled: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   constructor(private http: HttpClient) {}
+
+  // Dashboard
+  getDashboardStats(): Observable<DashboardStats> {
+    return this.http.get<DashboardStats>('/dashboard/stats');
+  }
 
   // Veículos
   getVeiculos(): Observable<any[]> {

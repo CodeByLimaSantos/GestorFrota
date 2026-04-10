@@ -172,7 +172,7 @@ export class MotoristasComponent implements OnInit {
   loadMotoristas(): void {
     this.loading = true;
     this.apiService.getMotoristas().subscribe({
-      next: (data) => this.motoristas = data,
+      next: (data) => this.motoristas = data || [],
       complete: () => this.loading = false,
       error: () => { this.toast.error('Erro ao carregar motoristas'); this.loading = false; }
     });

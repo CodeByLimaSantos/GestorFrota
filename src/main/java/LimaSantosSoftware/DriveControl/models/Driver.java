@@ -37,9 +37,9 @@ public class Driver {
     private Rental rental;
 
     public enum DriverStatus {
-        ACTIVE,
-        RENTED,
-        ON_HOLD,
-        INACTIVE
+        ON_RENTAL,
+        WAITING,
+        INACTIVE,
+        ACTIVE
     }
 }

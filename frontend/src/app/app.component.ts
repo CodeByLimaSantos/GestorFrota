@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs';
 import { AuthService } from './services/auth.service';
 import { ThemeService } from './shared/services/theme.service';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
@@ -100,6 +101,7 @@ export class AppComponent implements OnInit {
   sidebarCollapsed = false;
   currentUser: string | null = null;
   darkMode = false;
+  private isAuthPage = false;
 
   constructor(
     private authService: AuthService,
@@ -109,11 +111,29 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.darkMode = this.themeService.isDark;
-    this.isLoggedIn = this.authService.isAuthenticated();
+
+    // Track current route to detect auth pages
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd)
+    ).subscribe(event => {
+      this.isAuthPage = ['/login', '/registro'].includes(event.urlAfterRedirects);
+      this.updateLoggedIn();
+    });
+
+    // Also check on initial load
+    this.isAuthPage = ['/login', '/registro', '/'].includes(this.router.url);
+
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user?.username || null;
-      this.isLoggedIn = !!user;
+      this.updateLoggedIn();
     });
+
+    this.updateLoggedIn();
+  }
+
+  private updateLoggedIn(): void {
+    // Never show sidebar on auth pages, even if token exists
+    this.isLoggedIn = !this.isAuthPage && this.authService.isAuthenticated();
   }
 
   toggleTheme(): void {

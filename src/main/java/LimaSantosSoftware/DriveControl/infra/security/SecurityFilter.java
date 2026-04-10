@@ -23,13 +23,17 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
+        System.out.println("[SecurityFilter] Request: " + request.getMethod() + " " + request.getRequestURI());
+        System.out.println("[SecurityFilter] Token present: " + (token != null));
 
         if (token != null) {
             var login = tokenService.validateToken(token);
+            System.out.println("[SecurityFilter] Validated login: " + login);
 
             // ✅ Só prossegue se o token for válido e retornar um login
             if (login != null && !login.isEmpty()) {
                 UserDetails user = userRepository.findByUsername(login);
+                System.out.println("[SecurityFilter] User found: " + (user != null ? user.getUsername() : "null"));
 
                 // ✅ Garante que o usuário existe no banco
                 if (user != null) {
@@ -37,6 +41,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                             user, null, user.getAuthorities()
                     );
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                    System.out.println("[SecurityFilter] Authentication set with authorities: " + user.getAuthorities());
                 }
             }
         }
