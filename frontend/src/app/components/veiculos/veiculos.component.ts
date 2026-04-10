@@ -193,26 +193,28 @@ export class VeiculosComponent implements OnInit {
     if (this.editMode && this.form.id) {
       this.apiService.updateVeiculo(this.form.id, this.form).subscribe({
         next: () => {
-          this.toast.success('Ve\u00edculo atualizado com sucesso!');
+          this.toast.success('Veículo atualizado com sucesso!');
           this.loadVeiculos();
           this.closeModal();
           this.saving = false;
         },
-        error: () => {
-          this.toast.error('Erro ao atualizar ve\u00edculo');
+        error: (err) => {
+          this.toast.error(err?.status === 403 ? 'Sem permissão' : 'Erro ao atualizar veículo',
+            err?.status === 403 ? 'Apenas gestores podem editar veículos.' : undefined);
           this.saving = false;
         }
       });
     } else {
       this.apiService.createVeiculo(this.form).subscribe({
         next: () => {
-          this.toast.success('Ve\u00edculo criado com sucesso!');
+          this.toast.success('Veículo criado com sucesso!');
           this.loadVeiculos();
           this.closeModal();
           this.saving = false;
         },
-        error: () => {
-          this.toast.error('Erro ao criar ve\u00edculo');
+        error: (err) => {
+          this.toast.error(err?.status === 403 ? 'Sem permissão' : 'Erro ao criar veículo',
+            err?.status === 403 ? 'Apenas gestores podem cadastrar veículos.' : undefined);
           this.saving = false;
         }
       });
@@ -220,13 +222,14 @@ export class VeiculosComponent implements OnInit {
   }
 
   deleteVeiculo(id: string): void {
-    if (confirm('Tem certeza que deseja excluir este ve\u00edculo?')) {
+    if (confirm('Tem certeza que deseja excluir este veículo?')) {
       this.apiService.deleteVeiculo(id).subscribe({
         next: () => {
-          this.toast.success('Ve\u00edculo exclu\u00eddo com sucesso!');
+          this.toast.success('Veículo excluído com sucesso!');
           this.loadVeiculos();
         },
-        error: () => this.toast.error('Erro ao excluir ve\u00edculo')
+        error: (err) => this.toast.error(err?.status === 403 ? 'Sem permissão' : 'Erro ao excluir veículo',
+          err?.status === 403 ? 'Apenas gestores podem excluir veículos.' : undefined)
       });
     }
   }

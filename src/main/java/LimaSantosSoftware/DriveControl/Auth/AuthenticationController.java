@@ -35,12 +35,12 @@ public class AuthenticationController {
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var user = (User) auth.getPrincipal();
         var token = tokenService.generateToken(user);
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        return ResponseEntity.ok(new LoginResponseDTO(token, user.getRole().name(), user.getUsername()));
     }
 
 
     @PostMapping("/Register")
-    public ResponseEntity<User> register(@RequestBody @Valid RegisterDTO registerDTO) {
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO registerDTO) {
 
         if (this.userRepository.findByUsername(registerDTO.username()) != null) {
             return ResponseEntity.badRequest().build();
@@ -56,8 +56,7 @@ public class AuthenticationController {
                 registerDTO.role()
         );
 
-        User savedUser = this.userRepository.save(newUser)
-                ;
-        return ResponseEntity.ok(savedUser);
+        this.userRepository.save(newUser);
+        return ResponseEntity.ok(java.util.Map.of("message", "Usuário registrado com sucesso"));
     }
 }

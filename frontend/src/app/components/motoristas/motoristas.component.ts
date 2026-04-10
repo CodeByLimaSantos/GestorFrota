@@ -204,8 +204,9 @@ export class MotoristasComponent implements OnInit {
           this.closeModal();
           this.saving = false;
         },
-        error: () => {
-          this.toast.error('Erro ao atualizar motorista: ' + (this.getLastHttpError()));
+        error: (err) => {
+          this.toast.error(err?.status === 403 ? 'Sem permissão' : 'Erro ao atualizar motorista',
+            err?.status === 403 ? 'Apenas gestores podem editar motoristas.' : 'Verifique os dados.');
           this.saving = false;
         }
       });
@@ -218,8 +219,8 @@ export class MotoristasComponent implements OnInit {
           this.saving = false;
         },
         error: (err) => {
-          console.error('Erro ao criar motorista:', err);
-          this.toast.error('Erro ao criar motorista. Verifique o console.');
+          this.toast.error(err?.status === 403 ? 'Sem permissão' : 'Erro ao criar motorista',
+            err?.status === 403 ? 'Apenas gestores podem cadastrar motoristas.' : 'Verifique o console.');
           this.saving = false;
         }
       });
@@ -234,10 +235,11 @@ export class MotoristasComponent implements OnInit {
     if (confirm('Tem certeza que deseja excluir este motorista?')) {
       this.apiService.deleteMotorista(id).subscribe({
         next: () => {
-          this.toast.success('Motorista exclu\u00eddo com sucesso!');
+          this.toast.success('Motorista excluído com sucesso!');
           this.loadMotoristas();
         },
-        error: () => this.toast.error('Erro ao excluir motorista')
+        error: (err) => this.toast.error(err?.status === 403 ? 'Sem permissão' : 'Erro ao excluir motorista',
+          err?.status === 403 ? 'Apenas gestores podem excluir motoristas.' : undefined)
       });
     }
   }

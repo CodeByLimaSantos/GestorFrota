@@ -2,7 +2,6 @@ package LimaSantosSoftware.DriveControl.controller;
 
 import LimaSantosSoftware.DriveControl.DTO.RentalDTO;
 import LimaSantosSoftware.DriveControl.Services.RentalService;
-import LimaSantosSoftware.DriveControl.models.Rental;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +61,12 @@ public class rentalController {
     public ResponseEntity<?> changeRentalById(@PathVariable Long id, @RequestBody RentalDTO rentalDTO) {
         RentalDTO rental = rentalService.ChangeDriverById(id, rentalDTO);
         return ResponseEntity.ok(rental);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest()
+                .body(java.util.Map.of("error", ex.getMessage()));
     }
 
     @ExceptionHandler(RuntimeException.class)

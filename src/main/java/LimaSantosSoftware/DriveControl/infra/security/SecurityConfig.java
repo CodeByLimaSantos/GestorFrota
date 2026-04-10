@@ -28,18 +28,27 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        // Preflight CORS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // Auth endpoints — públicos
                         .requestMatchers(HttpMethod.POST, "/Auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Auth/Register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/rentals/Register").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/rentals/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/rentals/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/Vehicles/Register").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/Vehicles/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/Vehicles/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/Drivers/Register").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/Drivers/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/Drivers/**").permitAll()
+
+                        // Mutações (POST/PUT/DELETE) — somente GESTOR
+                        .requestMatchers(HttpMethod.POST,   "/Vehicles/**").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.PUT,    "/Vehicles/**").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.DELETE,  "/Vehicles/**").hasRole("GESTOR")
+
+                        .requestMatchers(HttpMethod.POST,   "/Drivers/**").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.PUT,    "/Drivers/**").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.DELETE,  "/Drivers/**").hasRole("GESTOR")
+
+                        .requestMatchers(HttpMethod.POST,   "/rentals/**").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.PUT,    "/rentals/**").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.DELETE,  "/rentals/**").hasRole("GESTOR")
+
+                        // Qualquer outra requisição — precisa estar autenticado
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

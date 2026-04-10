@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["veiculos.component.ts"],
+  "sourcesContent": ["\n    .spinner-sm {\n      width: 20px; height: 20px;\n      border: 2px solid var(--color-gray-200);\n      border-top-color: var(--color-primary-600);\n      border-radius: 50%;\n      animation: spin 0.8s linear infinite;\n    }\n    @keyframes spin { to { transform: rotate(360deg); } }\n  "],
+  "mappings": ";AACI,CAAA;AACE,SAAA;AAAa,UAAA;AACb,UAAA,IAAA,MAAA,IAAA;AACA,oBAAA,IAAA;AACA,iBAAA;AACA,aAAA,KAAA,KAAA,OAAA;;AAEF,WAFE;AAEgB;AAAK,eAAA,OAAA;;;",
+  "names": []
+}

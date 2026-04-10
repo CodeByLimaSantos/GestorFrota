@@ -6,7 +6,6 @@
 
 - **Angular 18** — componentes standalone, lazy loading, guards
 - **TypeScript** — tipagem forte nos servicos e componentes
-- **Chart.js** — graficos no dashboard (barras, pizza, linha)
 - **SCSS + CSS Custom Properties** — design system com tema claro/escuro
 - **Angular Router** — rotas protegidas com `authGuard`
 - **HttpInterceptor** — injecao automatica de Bearer token JWT
