@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["login.component.ts"],
-  "sourcesContent": ["\n    .btn-block { width: 100%; margin-top: var(--space-2); }\n    .field-error { color: var(--color-error-500); font-size: var(--text-xs); margin-top: var(--space-1); }\n    .spinner-icon { width: 18px; height: 18px; animation: spin 0.8s linear infinite; }\n    @keyframes spin { to { transform: rotate(360deg); } }\n  "],
-  "mappings": ";AACI,CAAA;AAAa,SAAA;AAAa,cAAA,IAAA;;AAC1B,CAAA;AAAe,SAAA,IAAA;AAA+B,aAAA,IAAA;AAA2B,cAAA,IAAA;;AACzE,CAAA;AAAgB,SAAA;AAAa,UAAA;AAAc,aAAA,KAAA,KAAA,OAAA;;AAC3C,WAD2C;AACzB;AAAK,eAAA,OAAA;;;",
-  "names": []
-}

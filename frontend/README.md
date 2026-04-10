@@ -73,14 +73,6 @@ Output em `dist/gestorfrota-frontend/`
 - Interceptor HTTP injeta `Bearer <token>` automaticamente
 - Guard redireciona para `/login` se nao autenticado
 
-### Dashboard
-- 4 cards de metricas (motoristas, veiculos, aluguéis ativos, receita)
-- Grafico de barras — aluguéis por mes (ultimos 12 meses)
-- Grafico de pizza — status de veiculos (disponivel, alugado, manutencao)
-- Grafico de linha — receita mensal
-- Grafico horizontal — top 5 veiculos mais alugados
-- Tabela dos ultimos 10 aluguéis com status coloridos
-
 ### CRUD Pages
 - Tabela com dados reais da API
 - Modal para criacao e edicao

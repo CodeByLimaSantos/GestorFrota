@@ -70,14 +70,10 @@ public class RentalService {
 
     /**
      * Validate date overlap for active rentals.
-     * Skips validation when new status is not ACTIVE.
+     * Overlap: newStart <= existingEnd AND newEnd >= existingStart
+     * Ignores the current rental when editing.
      */
     private void validateConflict(RentalDTO dto, Long excludeId) {
-        // Only validate conflicts for ACTIVE rentals
-        if (dto.getStatus() != null && !"ACTIVE".equalsIgnoreCase(dto.getStatus())) {
-            return;
-        }
-
         Long vehicleId = dto.getVehicleId();
         Long driverId = dto.getDriverId();
 

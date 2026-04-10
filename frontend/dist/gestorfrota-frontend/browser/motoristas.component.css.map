@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["motoristas.component.ts"],
-  "sourcesContent": ["\n    .spinner-sm {\n      width: 20px; height: 20px;\n      border: 2px solid var(--color-gray-200);\n      border-top-color: var(--color-primary-600);\n      border-radius: 50%;\n      animation: spin 0.8s linear infinite;\n    }\n    @keyframes spin { to { transform: rotate(360deg); } }\n    .table-avatar {\n      width: 32px; height: 32px;\n      border-radius: var(--radius-full);\n      background: var(--color-primary-50);\n      color: var(--color-primary-600);\n      display: flex; align-items: center; justify-content: center;\n      font-size: 12px; font-weight: var(--font-semibold);\n      flex-shrink: 0;\n    }\n  "],
-  "mappings": ";AACI,CAAA;AACE,SAAA;AAAa,UAAA;AACb,UAAA,IAAA,MAAA,IAAA;AACA,oBAAA,IAAA;AACA,iBAAA;AACA,aAAA,KAAA,KAAA,OAAA;;AAEF,WAFE;AAEgB;AAAK,eAAA,OAAA;;;AACvB,CAAA;AACE,SAAA;AAAa,UAAA;AACb,iBAAA,IAAA;AACA,cAAA,IAAA;AACA,SAAA,IAAA;AACA,WAAA;AAAe,eAAA;AAAqB,mBAAA;AACpC,aAAA;AAAiB,eAAA,IAAA;AACjB,eAAA;;",
-  "names": []
-}

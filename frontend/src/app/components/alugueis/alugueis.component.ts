@@ -143,8 +143,8 @@ interface Aluguel {
           <div class="form-group">
             <label class="form-label">Veículo</label>
             <select class="form-control" [(ngModel)]="form.vehicleId" name="vehicleId">
-              <option [ngValue]="0">Selecione um veículo...</option>
-              <option *ngFor="let v of veiculosDisponiveis" [ngValue]="v.id">
+              <option [value]="0">Selecione um veículo...</option>
+              <option *ngFor="let v of veiculosDisponiveis" [value]="v.id">
                 {{ v.licensePlate }} — {{ v.make }} {{ v.model }}
               </option>
             </select>
@@ -152,7 +152,7 @@ interface Aluguel {
           <div class="form-group">
             <label class="form-label">Motorista</label>
             <select class="form-control" [(ngModel)]="form.driverId" name="driverId">
-              <option [ngValue]="0">Selecione um motorista...</option>
+              <option [ngValue]="null">Selecione um motorista...</option>
               <option *ngFor="let m of motoristasDisponiveis" [ngValue]="m.id">{{ m.name }}</option>
             </select>
           </div>
@@ -354,11 +354,10 @@ export class AlugueisComponent implements OnInit {
 
   editAluguel(aluguel: Aluguel): void {
     this.form = {
-      id: aluguel.id,
-      vehicleId: Number(aluguel.vehicleId) || 0,
-      driverId: Number(aluguel.driverId) || 0,
-      startDate: aluguel.startDate?.split('T')[0] ?? '',
-      endDate: aluguel.endDate?.split('T')[0] ?? '',
+      vehicleId: aluguel.vehicleId ?? 0,
+      driverId: aluguel.driverId ?? 0,
+      startDate: aluguel.startDate.split('T')[0],
+      endDate: aluguel.endDate.split('T')[0],
       status: aluguel.status as 'ACTIVE' | 'COMPLETED' | 'CANCELLED'
     };
     this.formError = '';
@@ -367,12 +366,12 @@ export class AlugueisComponent implements OnInit {
   }
 
   validateForm(): string | null {
-    if (!this.form.vehicleId || this.form.vehicleId <= 0) return 'Selecione um veículo.';
-    if (!this.form.driverId || this.form.driverId <= 0) return 'Selecione um motorista.';
+    if (!this.form.vehicleId) return 'Selecione um veículo.';
+    if (!this.form.driverId) return 'Selecione um motorista.';
     if (!this.form.startDate) return 'Informe a data de início.';
     if (!this.form.endDate) return 'Informe a data de fim.';
-    if (this.form.endDate < this.form.startDate) {
-      return 'A data de fim deve ser igual ou posterior à data de início.';
+    if (this.form.endDate <= this.form.startDate) {
+      return 'A data de fim deve ser posterior à data de início.';
     }
     return null;
   }
@@ -381,16 +380,9 @@ export class AlugueisComponent implements OnInit {
     this.formError = this.validateForm() ?? '';
     if (this.formError) return;
 
-    // Garantir que IDs são números
-    const payload: CreateRentalDTO = {
-      ...this.form,
-      vehicleId: Number(this.form.vehicleId),
-      driverId: Number(this.form.driverId)
-    };
-
     this.saving = true;
-    if (this.editMode && payload.id) {
-      this.apiService.updateAluguel(String(payload.id), payload).subscribe({
+    if (this.editMode && this.form.id) {
+      this.apiService.updateAluguel(String(this.form.id), this.form).subscribe({
         next: () => {
           this.toast.success('Aluguel atualizado com sucesso!');
           this.loadAll();
@@ -403,9 +395,7 @@ export class AlugueisComponent implements OnInit {
         }
       });
     } else {
-      // Não enviar id ao criar
-      const { id, ...createPayload } = payload;
-      this.apiService.createAluguel(createPayload).subscribe({
+      this.apiService.createAluguel(this.form).subscribe({
         next: () => {
           this.toast.success('Aluguel criado com sucesso!');
           this.loadAll();
@@ -422,16 +412,13 @@ export class AlugueisComponent implements OnInit {
   }
 
   private extractErrorMessage(err: any): string {
-    if (err?.status === 403) return 'Sem permissão. Apenas gestores podem gerenciar aluguéis.';
-    if (err?.status === 409) return err?.error?.error || 'Conflito de datas: já existe um aluguel ativo neste período.';
-    if (err?.status === 400) return err?.error?.error || 'Dados inválidos. Verifique os campos e tente novamente.';
     if (err?.error?.error) return err.error.error;
     if (err?.error?.message) return err.error.message;
     return 'Erro ao processar a requisição. Verifique os dados e tente novamente.';
   }
 
   isConflictError(): boolean {
-    return this.formError.includes('aluguel') || this.formError.includes('Conflito');
+    return this.formError.includes('aluguel');
   }
 
   deleteAluguel(id: number): void {
@@ -441,9 +428,7 @@ export class AlugueisComponent implements OnInit {
           this.toast.success('Aluguel excluído com sucesso!');
           this.loadAll();
         },
-        error: (err) => this.toast.error(
-          err?.status === 403 ? 'Sem permissão' : 'Erro ao excluir aluguel',
-          err?.status === 403 ? 'Apenas gestores podem excluir aluguéis.' : undefined)
+        error: () => this.toast.error('Erro ao excluir aluguel')
       });
     }
   }

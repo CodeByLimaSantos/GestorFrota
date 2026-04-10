@@ -250,8 +250,7 @@ export class SidebarComponent {
   constructor(public authService: AuthService) {
     authService.currentUser$.subscribe(user => {
       this.userName = user?.username || '';
-      const role = user?.role || '';
-      this.userRole = role === 'GESTOR' ? 'Gestor' : role === 'OPERATOR' ? 'Operador' : role;
+      this.userRole = user?.role || 'OPERADOR';
       this.userInitial = this.userName?.charAt(0).toUpperCase() || '?';
     });
   }

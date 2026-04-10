@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["app.component.ts"],
-  "sourcesContent": ["\n    .sidebar-wrapper {\n      width: var(--sidebar-width);\n      flex-shrink: 0;\n      transition: width var(--transition-slow);\n      overflow: hidden;\n    }\n    .sidebar-wrapper.collapsed {\n      width: var(--sidebar-collapsed-width);\n    }\n    .main-content {\n      flex: 1;\n      display: flex;\n      flex-direction: column;\n      min-width: 0;\n    }\n\n    /* Topbar */\n    .topbar {\n      height: var(--topbar-height);\n      background: var(--topbar-bg);\n      border-bottom: 1px solid var(--topbar-border);\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n      padding: 0 var(--space-6);\n      position: sticky;\n      top: 0;\n      z-index: var(--z-sticky);\n    }\n\n    .topbar-right {\n      display: flex;\n      align-items: center;\n      gap: var(--space-4);\n    }\n\n    .topbar-user {\n      font-size: var(--text-sm);\n      font-weight: var(--font-medium);\n      color: var(--color-gray-600);\n    }\n  "],
-  "mappings": ";AACI,CAAA;AACE,SAAA,IAAA;AACA,eAAA;AACA,cAAA,MAAA,IAAA;AACA,YAAA;;AAEF,CANA,eAMA,CAAA;AACE,SAAA,IAAA;;AAEF,CAAA;AACE,QAAA;AACA,WAAA;AACA,kBAAA;AACA,aAAA;;AAIF,CAAA;AACE,UAAA,IAAA;AACA,cAAA,IAAA;AACA,iBAAA,IAAA,MAAA,IAAA;AACA,WAAA;AACA,eAAA;AACA,mBAAA;AACA,WAAA,EAAA,IAAA;AACA,YAAA;AACA,OAAA;AACA,WAAA,IAAA;;AAGF,CAAA;AACE,WAAA;AACA,eAAA;AACA,OAAA,IAAA;;AAGF,CAAA;AACE,aAAA,IAAA;AACA,eAAA,IAAA;AACA,SAAA,IAAA;;",
-  "names": []
-}

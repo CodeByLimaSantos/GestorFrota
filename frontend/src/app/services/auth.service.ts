@@ -16,8 +16,6 @@ export interface RegisterRequest {
 
 export interface AuthResponse {
   token: string;
-  role: string;
-  username: string;
 }
 
 @Injectable({
@@ -46,12 +44,10 @@ export class AuthService {
       .pipe(
         tap(response => {
           this.setToken(response.token);
-          // Usa role e username reais retornados pelo backend
-          const rawRole = response.role || '';
-          const normalizedRole = rawRole.replace('ROLE_', '');
+          // Armazena username e role baseado no login
           const userInfo = {
-            username: response.username || credentials.username,
-            role: normalizedRole  // 'GESTOR' ou 'OPERATOR'
+            username: credentials.username,
+            role: 'GESTOR' // Será atualizado após primeira requisição à API
           };
           localStorage.setItem(this.USER_KEY, JSON.stringify(userInfo));
           this.currentUserSubject.next(userInfo);
