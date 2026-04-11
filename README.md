@@ -424,8 +424,8 @@ Este projeto é licenciado sob a MIT License.
 **Guilherme Lima Santos**
 
 [![GitHub](https://img.shields.io/badge/GitHub-Profile-black?style=flat-square&logo=github)](https://github.com/codebylimasantos)
-[![Email](https://img.shields.io/badge/Email-Contact-red?style=flat-square&logo=gmail)](mailto:contact@limasantossoftware.com)
-[![Website](https://img.shields.io/badge/Website-Visit-blue?style=flat-square&logo=globe)](https://limasantossoftware.com)
+[![Email](https://img.shields.io/badge/Email-Contact-red?style=flat-square&logo=gmail)](mailto:guilimadev19@gmail.com)
+[![Website](https://img.shields.io/badge/Website-Visit-blue?style=flat-square&logo=globe)](https://limasantos.netlify.app)
 
 ---
 
