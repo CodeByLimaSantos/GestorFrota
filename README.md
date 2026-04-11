@@ -73,10 +73,9 @@
 - Documentação de todos os endpoints
 
 ### ✅ Interface
-- Design moderno e intuitivo
-- Modo escuro/claro com persistência local
-- 100% responsivo (mobile, tablet, desktop)
-- Tema personalizado com CSS variables
+- Modo light/dark
+- foco em design responsivo (mobile, tablet, desktop)
+- SCSS
 
 ---
 
